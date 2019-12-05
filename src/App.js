@@ -1,9 +1,7 @@
 import React from 'react'
 
-// 导入 antd-mobile组件
-import { Button } from 'antd-mobile'
 // 导入 react路由
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import Home from "./pages/Home"
 import Citylist from "./pages/Citylist"
