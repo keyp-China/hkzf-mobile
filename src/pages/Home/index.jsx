@@ -6,39 +6,14 @@ import { TabBar } from 'antd-mobile';
 
 import News from '../News'
 
+// 导入home样式
+import './index.css'
+
 export default class Home extends React.Component {
     // 官网state
     state = {
         selectedTab: 'blueTab',
         hidden: false
-    }
-    // 官网 renderContent 函数  渲染的内容
-    renderContent(pageText) {
-        return (
-            <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
-                <div style={{ paddingTop: 60 }}>Clicked “{pageText}” tab， show “{pageText}” information</div>
-                <a style={{ display: 'block', marginTop: 40, marginBottom: 20, color: '#108ee9' }}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        this.setState({
-                            hidden: !this.state.hidden,
-                        });
-                    }}
-                >
-                    Click to show/hide tab-bar
-            </a>
-                <a style={{ display: 'block', marginBottom: 600, color: '#108ee9' }}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        this.setState({
-                            fullScreen: !this.state.fullScreen,
-                        });
-                    }}
-                >
-                    Click to switch fullscreen
-            </a>
-            </div>
-        );
     }
 
     render() {
@@ -48,6 +23,7 @@ export default class Home extends React.Component {
                 tintColor="#33A3F4" //选中的颜色
                 barTintColor="white" //背景颜色
                 hidden={this.state.hidden} //是否隐藏
+                noRenderContent={true} //true 代表不渲染内容
             >
                 <TabBar.Item
                     title="首页"
@@ -62,7 +38,6 @@ export default class Home extends React.Component {
                     }}
                     data-seed="logId"
                 >
-                    {this.renderContent('index')}
                 </TabBar.Item>
                 <TabBar.Item
                     icon={<i className="iconfont icon-findHouse"></i>}
@@ -77,7 +52,6 @@ export default class Home extends React.Component {
                     }}
                     data-seed="logId1"
                 >
-                    {this.renderContent('findHouse')}
                 </TabBar.Item>
                 <TabBar.Item
                     icon={<i className="iconfont icon-infom"></i>}
@@ -91,7 +65,6 @@ export default class Home extends React.Component {
                         });
                     }}
                 >
-                    {this.renderContent('infom')}
                 </TabBar.Item>
                 <TabBar.Item
                     icon={<i className="iconfont icon-my"></i>}
@@ -105,7 +78,6 @@ export default class Home extends React.Component {
                         });
                     }}
                 >
-                    {this.renderContent('My')}
                 </TabBar.Item>
             </TabBar>
         </div>
