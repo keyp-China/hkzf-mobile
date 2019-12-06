@@ -7,7 +7,7 @@ import { TabBar } from 'antd-mobile';
 import News from '../News'
 
 // 导入home样式
-import './index.css'
+import './home.css'
 
 export default class Home extends React.Component {
     // 官网state
