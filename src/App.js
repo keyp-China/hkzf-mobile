@@ -9,7 +9,7 @@ import Citylist from "./pages/Citylist"
 export default class App extends React.Component {
     render() {
         return <Router>
-            <div>
+            <div className="app">
                 <Route path="/home" component={Home}></Route>
                 <Route path="/citylist" component={Citylist}></Route>
             </div>

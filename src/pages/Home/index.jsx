@@ -4,7 +4,10 @@ import { Route } from 'react-router-dom'
 // 导入antd-mobile组件
 import { TabBar } from 'antd-mobile';
 
+import Index from '../Index'
+import Houselist from '../Houselist'
 import News from '../News'
+import Profile from '../Profile'
 
 // 导入home样式
 import './home.css'
@@ -12,12 +15,16 @@ import './home.css'
 export default class Home extends React.Component {
     // 官网state
     state = {
-        selectedTab: 'blueTab',
+        selectedTab: '/home/index',
         hidden: false
     }
 
     render() {
-        return <div>
+        return <div className="home">
+            <Route path="/home/index" component={Index}></Route>
+            <Route path="/home/houselist" component={Houselist}></Route>
+            <Route path="/home/news" component={News}></Route>
+            <Route path="/home/profile" component={Profile}></Route>
             <TabBar
                 unselectedTintColor="#949494" //没选中颜色
                 tintColor="#33A3F4" //选中的颜色
@@ -30,11 +37,13 @@ export default class Home extends React.Component {
                     key="index"
                     icon={<i className="iconfont icon-ind"></i>} //图标
                     selectedIcon={<i className="iconfont icon-ind"></i>} //选中图标
-                    selected={this.state.selectedTab === 'blueTab'}
-                    onPress={() => {
+                    selected={this.state.selectedTab === '/home/index'}
+                    onPress={() => { // 点击
                         this.setState({
-                            selectedTab: 'blueTab',
+                            selectedTab: '/home/index',
                         });
+                        // 路由跳转
+                        this.props.history.push("/home/index")
                     }}
                     data-seed="logId"
                 >
@@ -44,11 +53,12 @@ export default class Home extends React.Component {
                     selectedIcon={<i className="iconfont icon-findHouse"></i>}
                     title="找房"
                     key="findHouse"
-                    selected={this.state.selectedTab === 'redTab'}
+                    selected={this.state.selectedTab === '/home/houselist'}
                     onPress={() => {
                         this.setState({
-                            selectedTab: 'redTab',
+                            selectedTab: '/home/houselist',
                         });
+                        this.props.history.push("/home/houselist")
                     }}
                     data-seed="logId1"
                 >
@@ -58,11 +68,12 @@ export default class Home extends React.Component {
                     selectedIcon={<i className="iconfont icon-infom"></i>}
                     title="资讯"
                     key="infom"
-                    selected={this.state.selectedTab === 'greenTab'}
+                    selected={this.state.selectedTab === '/home/news'}
                     onPress={() => {
                         this.setState({
-                            selectedTab: 'greenTab',
+                            selectedTab: '/home/news',
                         });
+                        this.props.history.push("/home/news")
                     }}
                 >
                 </TabBar.Item>
@@ -71,11 +82,12 @@ export default class Home extends React.Component {
                     selectedIcon={<i className="iconfont icon-my"></i>}
                     title="我的"
                     key="my"
-                    selected={this.state.selectedTab === 'yellowTab'}
+                    selected={this.state.selectedTab === '/home/profile'}
                     onPress={() => {
                         this.setState({
-                            selectedTab: 'yellowTab',
+                            selectedTab: '/home/profile',
                         });
+                        this.props.history.push("/home/profile")
                     }}
                 >
                 </TabBar.Item>
