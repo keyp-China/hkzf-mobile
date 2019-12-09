@@ -23,11 +23,13 @@ export default class Index extends React.Component {
         swipters: [], // 轮播数据
         imgHeight: 176,
         isplay: false, // 轮播图是否自动播放
-        groups: [] // 租房小组数据
+        groups: [], // 租房小组数据
+        news: [] // 最新资讯数据
     }
     componentDidMount() {
         this.getSwiper() //获取轮播图数据
         this.getGroup() //获取租房小组数据
+        this.getNews() //获取最新资讯数据
     }
 
     /* 获取轮播图数据 */
@@ -50,6 +52,17 @@ export default class Index extends React.Component {
         }
         this.setState({
             groups: res.data.body
+        })
+    }
+    /* 获取最新资讯数据 */
+    async getNews() {
+        let res = await axios.get("http://localhost:8080/home/news")
+        console.log(res);
+        if (res.data.status != 200) {
+            return
+        }
+        this.setState({
+            news: res.data.body
         })
     }
 
@@ -86,6 +99,21 @@ export default class Index extends React.Component {
                 <img src={item.imgSrc} alt="" />
                 <h2>{item.name}</h2>
             </Flex.Item>
+        })
+    }
+    /* 渲染最新资讯 */
+    renderNews() {
+        return this.state.news.map(item => {
+            return <li className="news-item" key={item.id}>
+                <img src={`http://localhost:8080${item.imgSrc}`} alt="" />
+                <div className="list-right">
+                    <h2>{item.title}</h2>
+                    <p>
+                        <span>{item.from}</span>
+                        <span>{item.date}</span>
+                    </p>
+                </div>
+            </li>
         })
     }
 
@@ -126,6 +154,13 @@ export default class Index extends React.Component {
                         </Flex>
                     }}
                 />
+            </div>
+            {/* 最新资讯 */}
+            <div className="news">
+                <div className="news-title">最新资讯</div>
+                <ul className=".news-list">
+                    {this.renderNews()}
+                </ul>
             </div>
         </div>
     }
