@@ -24,12 +24,22 @@ export default class Index extends React.Component {
         imgHeight: 176,
         isplay: false, // 轮播图是否自动播放
         groups: [], // 租房小组数据
-        news: [] // 最新资讯数据
+        news: [], // 最新资讯数据
+        cityName: "" //当前城市
     }
     componentDidMount() {
         this.getSwiper() //获取轮播图数据
         this.getGroup() //获取租房小组数据
         this.getNews() //获取最新资讯数据
+
+        // 获取当前城市信息
+        let myCity = new window.BMap.LocalCity();
+        myCity.get((result) => {
+            let cityName = result.name;
+            this.setState({
+                cityName
+            })
+        });
     }
 
     /* 获取轮播图数据 */
@@ -47,7 +57,7 @@ export default class Index extends React.Component {
     /* 获取租房小组数据 */
     async getGroup() {
         let res = await axios.get("http://localhost:8080/home/groups")
-        if (res.data.status != 200) {
+        if (res.data.status !== 200) {
             return
         }
         this.setState({
@@ -57,8 +67,7 @@ export default class Index extends React.Component {
     /* 获取最新资讯数据 */
     async getNews() {
         let res = await axios.get("http://localhost:8080/home/news")
-        console.log(res);
-        if (res.data.status != 200) {
+        if (res.data.status !== 200) {
             return
         }
         this.setState({
@@ -128,7 +137,7 @@ export default class Index extends React.Component {
                             this.props.history.push("/citylist")
                         }}
                     >
-                        <span>北京</span>
+                        <span>{this.state.cityName}</span>
                         <i className="iconfont icon-arrow" />
                     </div>
                     <div
@@ -145,7 +154,7 @@ export default class Index extends React.Component {
                     className="iconfont icon-map"
                     onClick={() => {
                         this.props.history.push("/map")
-                        }}
+                    }}
                 />
             </Flex>
             {/* 轮播图 */}
