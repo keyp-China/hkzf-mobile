@@ -1,6 +1,6 @@
 import React from "react"
 import axios from 'axios'
-import { Carousel, Flex } from 'antd-mobile';
+import { Carousel, Flex, Grid } from 'antd-mobile';
 
 // 导入scss
 import './index.scss'
@@ -22,10 +22,12 @@ export default class Index extends React.Component {
     state = {
         swipters: [], // 轮播数据
         imgHeight: 176,
-        isplay: false // 轮播图是否自动播放
+        isplay: false, // 轮播图是否自动播放
+        groups: [] // 租房小组数据
     }
     componentDidMount() {
         this.getSwiper() //获取轮播图数据
+        this.getGroup() //获取租房小组数据
     }
 
     /* 获取轮播图数据 */
@@ -40,6 +42,17 @@ export default class Index extends React.Component {
             })
         })
     }
+    /* 获取租房小组数据 */
+    async getGroup() {
+        let res = await axios.get("http://localhost:8080/home/groups")
+        if (res.data.status != 200) {
+            return
+        }
+        this.setState({
+            groups: res.data.body
+        })
+    }
+
     /* 渲染轮播图 */
     renderSwiper() {
         return this.state.swipters.map(val => (
@@ -89,6 +102,31 @@ export default class Index extends React.Component {
             <Flex className="hezu">
                 {this.renderNav()}
             </Flex>
+            {/* 租房小组 */}
+            <div className="groups">
+                {/* 标题 */}
+                <div className="groups-title">
+                    <h2>租房小组</h2>
+                    <span>更多</span>
+                </div>
+                {/* 内容里面 四个 */}
+                <Grid
+                    data={this.state.groups} // 数组数据
+                    columnNum={2} // 每行占几列
+                    activeStyle={true} // 点击是否出现灰色样式
+                    square={false} // 不要正方形
+                    hasLine={false} // 不要边框线
+                    renderItem={item => { //渲染每一个格子的 内容
+                        return <Flex key={item.id} className="grid-item" justify="between">
+                            <div className="desc">
+                                <h3>{item.title}</h3>
+                                <p>{item.desc}</p>
+                            </div>
+                            <img src={`http://localhost:8080${item.imgSrc}`} alt="" />
+                        </Flex>
+                    }}
+                />
+            </div>
         </div>
     }
 }
