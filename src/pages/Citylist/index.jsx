@@ -67,11 +67,18 @@ export default class Citylist extends React.Component {
         isVisible, // 是否可见
         style, // 必加 不加无样式
     }) => {
+        let word = this.state.cityindex[index] // # hot a b c d
+        let citys = this.state.citylist[word] // 城市数组
         return (
-            <div key={key} style={style}>
-                {this.state.cityindex[index]}
+            <div key={key} style={style} className="city">
+                <div className='title'>{word}</div>
+                {citys.map(item => {
+                    return <div className="name" key={item.value}>
+                        {item.label}
+                    </div>
+                })}
             </div>
-        );
+        )
     }
 
     render() {
@@ -88,7 +95,7 @@ export default class Citylist extends React.Component {
                 width={300} // 列表宽度
                 height={300} // 列表高度
                 rowCount={this.state.cityindex.length} // 数组长度多少行
-                rowHeight={20} // 每行的高度
+                rowHeight={200} // 每行的高度
                 rowRenderer={this.rowRenderer} // 渲染每行的内容
             />
         </div>
