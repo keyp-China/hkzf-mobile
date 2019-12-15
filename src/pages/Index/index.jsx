@@ -1,6 +1,7 @@
 import React from "react"
 import axios from 'axios'
 import { Carousel, Flex, Grid } from 'antd-mobile';
+import { getCurrentCity } from '../../utils'
 
 // 导入scss
 import './index.scss'
@@ -25,7 +26,7 @@ export default class Index extends React.Component {
         isplay: false, // 轮播图是否自动播放
         groups: [], // 租房小组数据
         news: [], // 最新资讯数据
-        cityName: "" //当前城市
+        city: {} //当前城市
     }
     componentDidMount() {
         this.getSwiper() //获取轮播图数据
@@ -33,13 +34,7 @@ export default class Index extends React.Component {
         this.getNews() //获取最新资讯数据
 
         // 获取当前城市信息
-        let myCity = new window.BMap.LocalCity();
-        myCity.get((result) => {
-            let cityName = result.name;
-            this.setState({
-                cityName
-            })
-        });
+        this.getCurrentCity()
     }
 
     /* 获取轮播图数据 */
@@ -72,6 +67,13 @@ export default class Index extends React.Component {
         }
         this.setState({
             news: res.data.body
+        })
+    }
+    /* 获取当前城市信息 */
+    async getCurrentCity() {
+        let city = await getCurrentCity()
+        this.setState({
+            city
         })
     }
 
@@ -137,7 +139,7 @@ export default class Index extends React.Component {
                             this.props.history.push("/citylist")
                         }}
                     >
-                        <span>{this.state.cityName}</span>
+                        <span>{this.state.city.label}</span>
                         <i className="iconfont icon-arrow" />
                     </div>
                     <div

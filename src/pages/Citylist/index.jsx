@@ -2,6 +2,8 @@ import React from "react"
 import axios from "axios"
 
 import { NavBar, Icon } from 'antd-mobile'
+// 获取当前定位城市方法
+import { getCurrentCity } from '../../utils'
 
 import './citylist.scss'
 
@@ -20,10 +22,14 @@ export default class Citylist extends React.Component {
 
         // 2. 获取热门城市信息
         let hotres = await axios.get("http://localhost:8080/area/hot")
-        citylist.hot = hotres.data.body
+        citylist['hot'] = hotres.data.body
         cityindex.unshift('hot')
+        
+        // 3. 获取当前城市定位
+        let currentCity = await getCurrentCity()
+        citylist['#'] = [currentCity]
+        cityindex.unshift('#')
         console.log(citylist, cityindex);
-
     }
 
     /* 格式化城市 */
