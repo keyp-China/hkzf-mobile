@@ -1,6 +1,7 @@
 /*  留出顶部位置避免被遮住 */
 .citylist {
-    margin-top: 45px;
+    padding-top: 45px;
+    height: 100%;
 }
 
 /* 导航栏固定到顶部 */

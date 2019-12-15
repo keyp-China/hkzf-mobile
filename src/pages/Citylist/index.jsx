@@ -2,7 +2,7 @@ import React from "react"
 import axios from "axios"
 
 import { NavBar, Icon } from 'antd-mobile'
-import { List } from 'react-virtualized' // react-virtualized可视区域渲染
+import { List, AutoSizer } from 'react-virtualized' // react-virtualized可视区域渲染
 // 获取当前定位城市方法
 import { getCurrentCity } from '../../utils'
 
@@ -90,14 +90,20 @@ export default class Citylist extends React.Component {
                 icon={<Icon type="left" />}
                 onLeftClick={() => this.props.history.go(-1)}
             >城市列表</NavBar>
-            {/* 左侧城市列表 */}
-            <List
-                width={300} // 列表宽度
-                height={300} // 列表高度
-                rowCount={this.state.cityindex.length} // 数组长度多少行
-                rowHeight={200} // 每行的高度
-                rowRenderer={this.rowRenderer} // 渲染每行的内容
-            />
+
+            {/* AutoSizer自动占满整个屏幕 */}
+            <AutoSizer>
+                {/* 左侧城市列表 */}
+                {({ height, width }) => (
+                    <List
+                        width={width} // 列表宽度
+                        height={height} // 列表高度
+                        rowCount={this.state.cityindex.length} // 数组长度多少行
+                        rowHeight={200} // 每行的高度
+                        rowRenderer={this.rowRenderer} // 渲染每行的内容
+                    />
+                )}
+            </AutoSizer>
         </div>
     }
 }
