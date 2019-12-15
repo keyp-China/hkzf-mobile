@@ -2,12 +2,17 @@ import React from "react"
 import axios from "axios"
 
 import { NavBar, Icon } from 'antd-mobile'
+import { List } from 'react-virtualized' // react-virtualized可视区域渲染
 // 获取当前定位城市方法
 import { getCurrentCity } from '../../utils'
 
 import './citylist.scss'
 
 export default class Citylist extends React.Component {
+    state = {
+        citylist: {}, // 城市列表
+        cityindex: [] // 城市索引
+    }
 
     componentDidMount() {
         this.getCitylist() // 获取城市列表
@@ -24,12 +29,17 @@ export default class Citylist extends React.Component {
         let hotres = await axios.get("http://localhost:8080/area/hot")
         citylist['hot'] = hotres.data.body
         cityindex.unshift('hot')
-        
+
         // 3. 获取当前城市定位
         let currentCity = await getCurrentCity()
         citylist['#'] = [currentCity]
         cityindex.unshift('#')
-        console.log(citylist, cityindex);
+
+        // 4. 赋值城市列表与城市索引
+        this.setState({
+            citylist,
+            cityindex
+        })
     }
 
     /* 格式化城市 */
@@ -49,6 +59,21 @@ export default class Citylist extends React.Component {
         return { citylist, cityindex }
     }
 
+    /* 渲染城市列表 */
+    rowRenderer = ({
+        key, // 唯一key
+        index, // 索引01234
+        isScrolling, // 是否正在滚动
+        isVisible, // 是否可见
+        style, // 必加 不加无样式
+    }) => {
+        return (
+            <div key={key} style={style}>
+                {this.state.cityindex[index]}
+            </div>
+        );
+    }
+
     render() {
         return <div className="citylist">
             {/* 头部导航栏 */}
@@ -58,6 +83,14 @@ export default class Citylist extends React.Component {
                 icon={<Icon type="left" />}
                 onLeftClick={() => this.props.history.go(-1)}
             >城市列表</NavBar>
+            {/* 左侧城市列表 */}
+            <List
+                width={300} // 列表宽度
+                height={300} // 列表高度
+                rowCount={this.state.cityindex.length} // 数组长度多少行
+                rowHeight={20} // 每行的高度
+                rowRenderer={this.rowRenderer} // 渲染每行的内容
+            />
         </div>
     }
 }
