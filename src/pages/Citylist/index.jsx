@@ -81,6 +81,13 @@ export default class Citylist extends React.Component {
         )
     }
 
+    /* 动态计算每个大盒子的高度 */
+    getRowHeight = ({ index }) => {
+        let word = this.state.cityindex[index]
+        let citys = this.state.citylist[word]
+        return 36 + 50 * citys.length // 字母高度+每个城市高度*城市数量
+    }
+
     render() {
         return <div className="citylist">
             {/* 头部导航栏 */}
@@ -99,7 +106,7 @@ export default class Citylist extends React.Component {
                         width={width} // 列表宽度
                         height={height} // 列表高度
                         rowCount={this.state.cityindex.length} // 数组长度多少行
-                        rowHeight={200} // 每行的高度
+                        rowHeight={this.getRowHeight} // 每行的高度 可写数字或者函数（函数带参数对象有index索引）
                         rowRenderer={this.rowRenderer} // 渲染每行的内容
                     />
                 )}
