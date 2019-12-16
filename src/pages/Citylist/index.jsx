@@ -11,7 +11,8 @@ import './citylist.scss'
 export default class Citylist extends React.Component {
     state = {
         citylist: {}, // 城市列表
-        cityindex: [] // 城市索引
+        cityindex: [], // 城市索引
+        indexActive: 0 // 当前索引位置
     }
 
     componentDidMount() {
@@ -93,6 +94,16 @@ export default class Citylist extends React.Component {
         )
     }
 
+    /* 当滚动到索引改变的时候 */
+    onRowsRendered = ({ startIndex }) => {
+        // startIndex最顶部结束的索引 stopIndex最底部结束的索引
+        if (this.state.indexActive !== startIndex) {
+            this.setState({
+                indexActive: startIndex
+            })
+        }
+    }
+
     /* 动态计算每个大盒子的高度 */
     getRowHeight = ({ index }) => {
         let word = this.state.cityindex[index]
@@ -120,9 +131,22 @@ export default class Citylist extends React.Component {
                         rowCount={this.state.cityindex.length} // 数组长度多少行
                         rowHeight={this.getRowHeight} // 每行的高度 可写数字或者函数（函数带参数对象有index索引）
                         rowRenderer={this.rowRenderer} // 渲染每行的内容
+                        onRowsRendered={this.onRowsRendered} // 当滚动到索引改变的时候
                     />
                 )}
             </AutoSizer>
+
+            {/* 右侧城市索引 */}
+            <ul className="city-index">
+                {/* 循环生成字母 */}
+                {
+                    this.state.cityindex.map((item, index) => {
+                        return <li className={this.state.indexActive === index ? 'index-active' : ''} key={index}>
+                            {item === 'hot' ? "热" : item.toUpperCase()}
+                        </li>
+                    })
+                }
+            </ul>
         </div>
     }
 }
