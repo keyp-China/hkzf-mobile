@@ -63,16 +63,12 @@ export default class Citylist extends React.Component {
     formatWord = word => {
         switch (word) {
             case '#':
-                word = '当前城市'
-                break
+                return '当前城市'
             case 'hot':
-                word = '热门城市'
-                break
+                return '热门城市'
             default:
-                word = word.toUpperCase()
-                break
+                return word.toUpperCase()
         }
-        return word
     }
 
     /* 渲染城市列表 */
