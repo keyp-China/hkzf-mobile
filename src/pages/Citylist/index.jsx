@@ -59,6 +59,22 @@ export default class Citylist extends React.Component {
         return { citylist, cityindex }
     }
 
+    /* 格式化word变大写 */
+    formatWord = word => {
+        switch (word) {
+            case '#':
+                word = '当前城市'
+                break
+            case 'hot':
+                word = '热门城市'
+                break
+            default:
+                word = word.toUpperCase()
+                break
+        }
+        return word
+    }
+
     /* 渲染城市列表 */
     rowRenderer = ({
         key, // 唯一key
@@ -71,7 +87,7 @@ export default class Citylist extends React.Component {
         let citys = this.state.citylist[word] // 城市数组
         return (
             <div key={key} style={style} className="city">
-                <div className='title'>{word}</div>
+                <div className='title'>{this.formatWord(word)}</div>
                 {citys.map(item => {
                     return <div className="name" key={item.value}>
                         {item.label}
