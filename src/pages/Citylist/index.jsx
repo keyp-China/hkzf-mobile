@@ -1,12 +1,15 @@
 import React from "react"
 import axios from "axios"
 
-import { NavBar, Icon } from 'antd-mobile'
+import { NavBar, Icon, Toast } from 'antd-mobile'
 import { List, AutoSizer } from 'react-virtualized' // react-virtualized可视区域渲染
 // 获取当前定位城市方法
 import { getCurrentCity } from '../../utils'
 
 import './citylist.scss'
+
+// 有房源的城市
+const HAS_HOUSE = ["北京", "上海", "深圳", "广州"]
 
 export default class Citylist extends React.Component {
     state = {
@@ -88,7 +91,18 @@ export default class Citylist extends React.Component {
             <div key={key} style={style} className="city">
                 <div className='title'>{this.formatWord(word)}</div>
                 {citys.map(item => {
-                    return <div className="name" key={item.value}>
+                    return <div className="name"
+                        key={item.value}
+                        onClick={() => {
+                            //北上广深才有房源
+                            if (HAS_HOUSE.includes(item.label)) {
+                                localStorage.setItem("my-city", JSON.stringify(item)) // 存储本地
+                                this.props.history.push("/home/index") // 跳回首页
+                            } else {
+                                Toast.info(item.label + "市目前无房源")
+                            }
+                        }}
+                    >
                         {item.label}
                     </div>
                 })}
