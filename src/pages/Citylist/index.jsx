@@ -15,6 +15,8 @@ export default class Citylist extends React.Component {
         indexActive: 0 // 当前索引位置
     }
 
+    listRef = React.createRef()
+
     componentDidMount() {
         this.getCitylist() // 获取城市列表
     }
@@ -126,6 +128,8 @@ export default class Citylist extends React.Component {
                 {/* 左侧城市列表 */}
                 {({ height, width }) => (
                     <List
+                        ref={this.listRef} // 为了获取这个dom对象
+                        scrollToAlignment="start" // 点击滚动时设置滚动到顶部
                         width={width} // 列表宽度
                         height={height} // 列表高度
                         rowCount={this.state.cityindex.length} // 数组长度多少行
@@ -141,7 +145,13 @@ export default class Citylist extends React.Component {
                 {/* 循环生成字母 */}
                 {
                     this.state.cityindex.map((item, index) => {
-                        return <li className={this.state.indexActive === index ? 'index-active' : ''} key={index}>
+                        return <li
+                            className={this.state.indexActive === index ? 'index-active' : ''}
+                            key={index}
+                            onClick={() => {
+                                this.listRef.current.scrollToRow(index) // 滚动到相应的索引
+                            }}
+                        >
                             {item === 'hot' ? "热" : item.toUpperCase()}
                         </li>
                     })
