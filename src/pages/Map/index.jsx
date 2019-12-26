@@ -1,4 +1,5 @@
 import React from "react"
+import NavHeader from '../../components/NavHeader'
 import "./map.scss"
 
 //react使用百度地图不能直接使用BMap 需要使用window.BMap
@@ -17,6 +18,8 @@ export default class Map extends React.Component {
     }
     render() {
         return <div className="map">
+            {/* 顶部navbar */}
+            <NavHeader>地图找房</NavHeader>
             {/* 准备百度地图容器container */}
             <div id="container"></div>
         </div>

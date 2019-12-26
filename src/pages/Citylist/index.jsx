@@ -3,6 +3,7 @@ import axios from "axios"
 
 import { NavBar, Icon, Toast } from 'antd-mobile'
 import { List, AutoSizer } from 'react-virtualized' // react-virtualized可视区域渲染
+import NavHeader from '../../components/NavHeader'
 // 获取当前定位城市方法
 import { getCurrentCity } from '../../utils'
 
@@ -130,12 +131,7 @@ export default class Citylist extends React.Component {
     render() {
         return <div className="citylist">
             {/* 头部导航栏 */}
-            <NavBar
-                className="navbar"
-                mode="light"
-                icon={<Icon type="left" />}
-                onLeftClick={() => this.props.history.go(-1)}
-            >城市列表</NavBar>
+            <NavHeader>城市列表</NavHeader>
 
             {/* AutoSizer自动占满整个屏幕 */}
             <AutoSizer>

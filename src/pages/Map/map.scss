@@ -1,5 +1,10 @@
 .app,
 .map,
-#container{
+#container {
     height: 100%;
+}
+
+/* 内容区域 */
+.map {
+    padding-top: 45px;
 }
