@@ -1,6 +1,7 @@
 import React from "react"
 import NavHeader from '../../components/NavHeader'
 import { getCurrentCity } from '../../utils/index'
+import styles from './map.module.css' // 局部样式引入
 import "./map.scss"
 
 //react使用百度地图不能直接使用BMap 需要使用window.BMap
@@ -23,17 +24,39 @@ export default class Map extends React.Component {
         // 将地址解析结果显示在地图上，并调整地图视野    
         myGeo.getPoint(currentCity.label, function (point) {
             if (point) {
-                map.centerAndZoom(point, 11);
-                // map.addOverlay(new BMap.Marker(point));
+                map.centerAndZoom(point, 11); //显示地图并缩放 值越大越详细
 
                 // 添加地图控件
                 map.addControl(new BMap.NavigationControl()); // 平移缩放控件
                 map.addControl(new BMap.ScaleControl()); // 比例尺控件
+
+                // 添加覆盖物
+                let opts = {
+                    position: point,    // 指定文本标注所在的地理位置
+                    offset: new BMap.Size(0, 0)    //设置文本偏移量
+                }
+                let label = new BMap.Label('', opts);  // 创建文本标注对象
+                // 设置覆盖物内容
+                label.setContent(`
+                    <div class="${styles.bubble}">
+                        <p class="${styles.name}">朝阳区</p>
+                        <p>10套</p>
+                    </div>
+               `)
+                // 设置覆盖物样式
+                label.setStyle({
+                    cursor: 'pointer',
+                    border: '0px solid rgb(255, 0, 0)',
+                    padding: '0px',
+                    whiteSpace: 'nowrap',
+                    fontSize: '12px',
+                    color: 'rgb(255, 255, 255)',
+                    textAlign: 'center'
+                });
+                // 放入覆盖物
+                map.addOverlay(label);
             }
         }, currentCity.label);
-
-        /* var point = new BMap.Point(116.404, 39.915);  //设置中心点坐标 经纬度
-        map.centerAndZoom(point, 11);   //显示地图并缩放 值越大越详细 */
     }
     render() {
         return <div className="map">
