@@ -15,7 +15,6 @@ export default class Map extends React.Component {
     async initMap() {
         // 获取当前城市信息
         let currentCity = await getCurrentCity()
-        console.log(currentCity);
         // 初始化一个地图
         var map = new BMap.Map("container");
 
@@ -26,6 +25,10 @@ export default class Map extends React.Component {
             if (point) {
                 map.centerAndZoom(point, 11);
                 // map.addOverlay(new BMap.Marker(point));
+
+                // 添加地图控件
+                map.addControl(new BMap.NavigationControl()); // 平移缩放控件
+                map.addControl(new BMap.ScaleControl()); // 比例尺控件
             }
         }, currentCity.label);
 
