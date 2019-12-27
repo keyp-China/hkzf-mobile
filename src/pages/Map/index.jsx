@@ -39,7 +39,7 @@ export default class Map extends React.Component {
     }
 
     /* 获取房屋数据并添加覆盖物 */
-    async renderOverlay(cityId) {
+    async renderOverlay(cityId, type = "circle") {
         // 发送请求 获取房源数据
         let res = await axios.get(`http://localhost:8080/area/map?id=${cityId}`)
         // 遍历添加覆盖物
@@ -59,12 +59,22 @@ export default class Map extends React.Component {
             }
             let label = new BMap.Label('', opts);  // 创建文本标注对象
             // 设置覆盖物内容
-            label.setContent(`
-            <div class="${styles.bubble}">
-                <p class="${styles.name}">${cityName}</p>
-                <p>${count}套</p>
-            </div>
-       `)
+            if (type == "circle") { // 圆形
+                label.setContent(`
+                    <div class="${styles.bubble}">
+                        <p class="${styles.name}">${cityName}</p>
+                        <p>${count}套</p>
+                    </div>
+                `)
+            } else if (type == "rect") { // 矩形
+                label.setContent(`
+                    <div class="${styles.rect}">
+                        <span class="${styles.housename}">${cityName}</span>
+                        <span class="${styles.housenum}">${count}套</span>
+                        <i class="${styles.arrow}"></i>
+                    </div>
+                `)
+            }
             // 设置覆盖物样式
             label.setStyle({
                 cursor: 'pointer',
@@ -92,7 +102,7 @@ export default class Map extends React.Component {
                         this.map.clearOverlays()
                     }, 0)
                     this.map.centerAndZoom(newPoint, 15);
-                    this.renderOverlay(value)
+                    this.renderOverlay(value, "rect")
                 } else if (zoom == 15) {
 
                 }
