@@ -125,12 +125,51 @@ export default class Map extends React.Component {
         })
     }
 
+    /* 渲染房屋列表 */
+    renderHouseList() {
+        return this.state.houselist.map(item => {
+            return <div className={styles.house} key={item.houseCode}>
+                <div className={styles.imgWrap}>
+                    <img className={styles.img} src={`http://localhost:8080${item.houseImg}`} alt="" />
+                </div>
+                <div className={styles.content}>
+                    <h3 className={styles.title}>{item.title}</h3>
+                    <div className={styles.desc}>{item.desc}</div>
+                    <div>
+                        {/* ['近地铁','随时看房'] */}
+                        {item.tags.map((v, i) => {
+                            let tagclass = `tag${i % 3 + 1}`
+                            return <span className={[styles.tag, styles[tagclass]].join(' ')} key={i}>
+                                {v}
+                            </span>
+                        })}
+                    </div>
+                    <div className={styles.price}>
+                        <span className={styles.priceNum}>{item.price}</span> 元/月
+                </div>
+                </div>
+            </div>
+        })
+    }
+
     render() {
         return <div className="map">
             {/* 顶部navbar */}
             <NavHeader>地图找房</NavHeader>
             {/* 准备百度地图容器container */}
             <div id="container"></div>
+
+            {/* 房子列表结构 */}
+            <div className={[styles.houseList, styles.show].join(' ')}>
+                <div className={styles.titleWrap}>
+                    <h1 className={styles.listTitle}>房屋列表</h1>
+                    <a className={styles.titleMore} href="/house/list">更多房源</a>
+                </div>
+                {/* 内容区域 */}
+                <div className={styles.houseItems}>
+                    {this.renderHouseList()}
+                </div>
+            </div>
         </div>
     }
 }
