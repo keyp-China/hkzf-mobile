@@ -1,0 +1,1 @@
+export let BASE_URL = process.env.REACT_APP_URL // 环境变量中获取baseURL
