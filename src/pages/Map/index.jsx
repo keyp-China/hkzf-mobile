@@ -112,6 +112,19 @@ export default class Map extends React.Component {
                     this.map.centerAndZoom(newPoint, 15);
                     this.renderOverlay(value, "rect")
                 } else if (zoom == 15) {
+                    // 设置点击移动地图到中心点
+                    // 获取点击坐标
+                    let clickX = e.changedTouches[0].clientX
+                    let clickY = e.changedTouches[0].clientY
+                    // 获取中心点坐标
+                    let centreX = window.innerWidth / 2
+                    let centreY = (window.innerHeight - 330) / 2
+                    // 计算移动坐标
+                    let distanceX = centreX - clickX
+                    let distanceY = centreY - clickY
+                    // 移动方法panBy(x,y)
+                    this.map.panBy(distanceX, distanceY)
+
                     // 获取房屋列表
                     this.getHouseList(value)
                 }
