@@ -1,15 +1,17 @@
 import React from "react"
 import NavHeader from '../../components/NavHeader'
 import { getCurrentCity } from '../../utils/index'
+import axios from "axios"
+import { Toast } from 'antd-mobile'
 import styles from './map.module.css' // 局部样式引入
 import "./map.scss"
-import axios from "axios"
 
 //react使用百度地图不能直接使用BMap 需要使用window.BMap
 const BMap = window.BMap
 export default class Map extends React.Component {
     state = {
-        houselist: [] // 房屋列表
+        houselist: [], // 房屋列表
+        isShowList: false // 是否显示房屋列表
     }
 
     componentDidMount() {
@@ -44,9 +46,11 @@ export default class Map extends React.Component {
 
     /* 获取房屋数据并添加覆盖物 */
     async renderOverlay(cityId, type = "circle") {
+        Toast.loading('正在加载中...', 0)
         // 发送请求 获取房源数据
         let res = await axios.get(`http://localhost:8080/area/map?id=${cityId}`)
         // 遍历添加覆盖物
+        Toast.hide()
         res.data.body.forEach(item => {
             let {
                 coord: { latitude, longitude },
@@ -119,9 +123,12 @@ export default class Map extends React.Component {
 
     /* 获取房屋列表 */
     getHouseList = async (id) => {
+        Toast.loading('正在加载中...', 0)
         let res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
+        Toast.hide()
         this.setState({
-            houselist: res.data.body.list
+            houselist: res.data.body.list,
+            isShowList: true // 开启列表渲染状态
         })
     }
 
@@ -160,7 +167,7 @@ export default class Map extends React.Component {
             <div id="container"></div>
 
             {/* 房子列表结构 */}
-            <div className={[styles.houseList, styles.show].join(' ')}>
+            <div className={[styles.houseList, this.state.isShowList ? styles.show : ''].join(' ')}>
                 <div className={styles.titleWrap}>
                     <h1 className={styles.listTitle}>房屋列表</h1>
                     <a className={styles.titleMore} href="/house/list">更多房源</a>
