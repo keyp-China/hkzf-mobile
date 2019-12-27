@@ -8,6 +8,10 @@ import axios from "axios"
 //react使用百度地图不能直接使用BMap 需要使用window.BMap
 const BMap = window.BMap
 export default class Map extends React.Component {
+    state = {
+        houselist: [] // 房屋列表
+    }
+
     componentDidMount() {
         //页面有个元素以后初始化一个地图
         this.initMap()
@@ -104,11 +108,20 @@ export default class Map extends React.Component {
                     this.map.centerAndZoom(newPoint, 15);
                     this.renderOverlay(value, "rect")
                 } else if (zoom == 15) {
-
+                    // 获取房屋列表
+                    this.getHouseList(value)
                 }
             })
             // 放入覆盖物
             this.map.addOverlay(label);
+        })
+    }
+
+    /* 获取房屋列表 */
+    getHouseList = async (id) => {
+        let res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
+        this.setState({
+            houselist: res.data.body.list
         })
     }
 
