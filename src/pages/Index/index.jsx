@@ -1,5 +1,5 @@
 import React from "react"
-import axios from 'axios'
+import { axios } from '../../utils/axios.js'
 import { Carousel, Flex, Grid } from 'antd-mobile';
 import { getCurrentCity } from '../../utils'
 
@@ -39,7 +39,7 @@ export default class Index extends React.Component {
 
     /* 获取轮播图数据 */
     async getSwiper() {
-        let res = await axios.get("http://localhost:8080/home/swiper")
+        let res = await axios.get("/home/swiper")
         this.setState({
             swipters: res.data.body
         }, () => {
@@ -51,7 +51,7 @@ export default class Index extends React.Component {
     }
     /* 获取租房小组数据 */
     async getGroup() {
-        let res = await axios.get("http://localhost:8080/home/groups")
+        let res = await axios.get("/home/groups")
         if (res.data.status !== 200) {
             return
         }
@@ -61,7 +61,7 @@ export default class Index extends React.Component {
     }
     /* 获取最新资讯数据 */
     async getNews() {
-        let res = await axios.get("http://localhost:8080/home/news")
+        let res = await axios.get("/home/news")
         if (res.data.status !== 200) {
             return
         }
