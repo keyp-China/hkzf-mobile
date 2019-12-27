@@ -77,7 +77,25 @@ export default class Map extends React.Component {
             });
             // 给覆盖物注册点击事件
             label.addEventListener("click", (e) => {
-                console.log(e);
+                // 当前缩放级别
+                let zoom = this.map.getZoom()
+                if (zoom == 11) {
+                    // 清除旧的覆盖物 百度地图需要使用定时器 要不会报错
+                    setTimeout(() => {
+                        this.map.clearOverlays()
+                    }, 0)
+                    // 跳转位置
+                    this.map.centerAndZoom(newPoint, 13);
+                    this.renderOverlay(value)
+                } else if (zoom == 13) {
+                    setTimeout(() => {
+                        this.map.clearOverlays()
+                    }, 0)
+                    this.map.centerAndZoom(newPoint, 15);
+                    this.renderOverlay(value)
+                } else if (zoom == 15) {
+
+                }
             })
             // 放入覆盖物
             this.map.addOverlay(label);
