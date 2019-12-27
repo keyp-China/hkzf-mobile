@@ -132,6 +132,12 @@ export default class Map extends React.Component {
             // 放入覆盖物
             this.map.addOverlay(label);
         })
+        // 给地图添加移动事件
+        this.map.addEventListener("movestart", () => {
+            this.setState({
+                isShowList: false
+            })
+        })
     }
 
     /* 获取房屋列表 */
