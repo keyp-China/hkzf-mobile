@@ -1,9 +1,28 @@
 import React from "react"
+import SeachHeader from '../../components/SeachHeader'
+import { getCurrentCity } from '../../utils/index.js'
+
+import './houselist.scss'
 
 export default class Houselist extends React.Component {
+    state = {
+        cityname: ''
+    }
+
+    async componentDidMount() {
+        let city = await getCurrentCity()
+        this.setState({
+            cityname: city.label
+        })
+    }
+
     render() {
         return <div className="houselist">
-            我是Houselist组件
+            {/* 顶部搜索栏 */}
+            <div className="seach">
+                <i className="iconfont icon-back" onClick={() => this.props.history.go(-1)}></i>
+                <SeachHeader cityname={this.state.cityname}></SeachHeader>
+            </div>
         </div>
     }
 }

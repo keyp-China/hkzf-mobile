@@ -3,6 +3,8 @@ import { axios } from '../../utils/axios.js'
 import { Carousel, Flex, Grid } from 'antd-mobile';
 import { getCurrentCity } from '../../utils'
 
+import SeachHeader from '../../components/SeachHeader'
+
 // 导入scss
 import './index.scss'
 
@@ -131,34 +133,7 @@ export default class Index extends React.Component {
     render() {
         return <div className="index">
             {/* 顶部搜索栏 */}
-            <Flex className="searchBox">
-                <Flex className="searchLeft">
-                    <div
-                        className="location"
-                        onClick={() => {
-                            this.props.history.push("/citylist")
-                        }}
-                    >
-                        <span>{this.state.city.label}</span>
-                        <i className="iconfont icon-arrow" />
-                    </div>
-                    <div
-                        className="searchFrom"
-                        onClick={() => {
-                            this.props.history.push("/search")
-                        }}
-                    >
-                        <i className="iconfont icon-search" />
-                        <span>请输入小区或地址</span>
-                    </div>
-                </Flex>
-                <i
-                    className="iconfont icon-map"
-                    onClick={() => {
-                        this.props.history.push("/map")
-                    }}
-                />
-            </Flex>
+            <SeachHeader cityname={this.state.city.label}></SeachHeader>
             {/* 轮播图 */}
             <Carousel
                 autoplay={this.state.isplay} // 是否自动播放

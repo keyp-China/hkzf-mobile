@@ -1,0 +1,24 @@
+.houselist {
+    .seach {
+        background-color: #eee;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+
+        .icon-back{
+            font-size: 14px;
+            margin-left: 5px;
+            margin-right: -5px;
+        }
+
+        .searchBox {
+            position: relative;
+            top: 0;
+
+            .icon-map {
+                color: green;
+            }
+        }
+    }
+}
