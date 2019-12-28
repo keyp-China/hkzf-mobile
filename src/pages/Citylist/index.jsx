@@ -98,7 +98,7 @@ export default class Citylist extends React.Component {
                             //北上广深才有房源
                             if (HAS_HOUSE.includes(item.label)) {
                                 localStorage.setItem("my-city", JSON.stringify(item)) // 存储本地
-                                this.props.history.push("/home/index") // 跳回首页
+                                this.props.history.go(-1) // 跳回上一页
                             } else {
                                 Toast.info(item.label + "市目前无房源")
                             }
