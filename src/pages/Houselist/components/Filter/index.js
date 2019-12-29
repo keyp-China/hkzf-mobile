@@ -36,7 +36,10 @@ export default class Filter extends Component {
     let { openType } = this.state
     // 区域:area  方式:mode  租金:price
     if (openType === 'area' || openType === 'mode' || openType === 'price') {
-      return <FilterPicker />
+      return <FilterPicker
+        onCancel={this.onCancel}
+        onSave={this.onSave}
+      />
     }
     return null
   }
@@ -47,6 +50,18 @@ export default class Filter extends Component {
       return <div className={styles.mask} />
     }
     return null
+  }
+  /* 取消函数 opentype='' */
+  onCancel = () => {
+    this.setState({
+      openType: ''
+    })
+  }
+  /* 确定函数 */
+  onSave = () => {
+    this.setState({
+      openType: ''
+    })
   }
 
   render() {
