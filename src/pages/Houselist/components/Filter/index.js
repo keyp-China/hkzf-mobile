@@ -50,10 +50,29 @@ export default class Filter extends Component {
 
   /* 渲染Picker() */
   renderPicker() {
-    let { openType } = this.state
+    let { openType, filterdata } = this.state
+    /* 区域、特点、楼层、朝向、租金、方式、房间类型、地铁 */
+    let { area, characteristic, floor, oriented, price, rentType, roomType, subway } = filterdata
     // 区域:area  方式:mode  租金:price
     if (openType === 'area' || openType === 'mode' || openType === 'price') {
+      let data = null
+      let cols = 1 // 默认一列
+      switch (openType) {
+        case 'area':
+          data = [area, subway]
+          cols = 3
+          break;
+        case 'mode':
+          data = rentType
+          break;
+        case 'price':
+          data = price
+          break;
+      }
+
       return <FilterPicker
+        data={data} // 显示数据
+        cols={cols} // 显示列数
         onCancel={this.onCancel}
         onSave={this.onSave}
       />
