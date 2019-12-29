@@ -25,7 +25,7 @@ export default function FilterTitle(props) {
         return <Flex.Item key={item.type}
           onClick={() => {
             // 修改title状态为高亮
-            onTitleClick(item.type, true)
+            onTitleClick(item.type)
           }}>
           {/* 选中类名： styles.selected */}
           <span className={[styles.dropdown, isSelected ? styles.selected : ''].join(' ')}>

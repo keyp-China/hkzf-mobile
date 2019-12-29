@@ -16,17 +16,28 @@ const titleSelectedStatus = {
 
 export default class Filter extends Component {
   state = {
-    titleSelectedStatus // 标题高亮状态
+    titleSelectedStatus, // 标题高亮状态
+    openType: '' // 打开的类别
   }
 
   // 修改标题状态
-  changeTitleStatus = (type, status) => {
+  onTitleClick = (type) => {
     this.setState({
       titleSelectedStatus: {
         ...this.state.titleSelectedStatus,
-        [type]: status
-      }
+        [type]: true
+      },
+      openType: type
     })
+  }
+
+  /* 渲染Picker() */
+  renderPicker() {
+    // 区域:area  方式:mode  租金:price
+    if (this.state.openType === 'area' || this.state.openType === 'mode' || this.state.openType === 'price') {
+      return <FilterPicker />
+    }
+    return null
   }
 
   render() {
@@ -39,11 +50,13 @@ export default class Filter extends Component {
           {/* 标题栏 */}
           <FilterTitle
             titleSelectedStatus={this.state.titleSelectedStatus}
-            onTitleClick={this.changeTitleStatus}
+            onTitleClick={this.onTitleClick}
           />
 
           {/* 前三个菜单对应的内容： */}
           {/* <FilterPicker /> */}
+          {this.renderPicker()}
+
 
           {/* 最后一个菜单对应的内容： */}
           {/* <FilterMore /> */}
