@@ -20,7 +20,7 @@ export default class Filter extends Component {
     openType: '' // 打开的类别
   }
 
-  // 修改标题状态
+  // 点击标题状态
   onTitleClick = (type) => {
     this.setState({
       titleSelectedStatus: {
@@ -33,9 +33,18 @@ export default class Filter extends Component {
 
   /* 渲染Picker() */
   renderPicker() {
+    let { openType } = this.state
     // 区域:area  方式:mode  租金:price
-    if (this.state.openType === 'area' || this.state.openType === 'mode' || this.state.openType === 'price') {
+    if (openType === 'area' || openType === 'mode' || openType === 'price') {
       return <FilterPicker />
+    }
+    return null
+  }
+  /* Picker渲染是的遮罩层 */
+  renderMask() {
+    let { openType } = this.state
+    if (openType === 'area' || openType === 'mode' || openType === 'price') {
+      return <div className={styles.mask} />
     }
     return null
   }
@@ -45,6 +54,7 @@ export default class Filter extends Component {
       <div className={styles.root}>
         {/* 前三个菜单的遮罩层 */}
         {/* <div className={styles.mask} /> */}
+        {this.renderMask()}
 
         <div className={styles.content}>
           {/* 标题栏 */}
