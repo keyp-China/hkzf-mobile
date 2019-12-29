@@ -4,6 +4,9 @@ import FilterTitle from '../FilterTitle'
 import FilterPicker from '../FilterPicker'
 import FilterMore from '../FilterMore'
 
+import { getCurrentCity } from '../../../../utils/index.js'
+import { axios } from '../../../../utils/axios.js'
+
 import styles from './index.module.css'
 
 // 控制FilterTitle是否高亮
@@ -17,7 +20,21 @@ const titleSelectedStatus = {
 export default class Filter extends Component {
   state = {
     titleSelectedStatus, // 标题高亮状态
-    openType: '' // 打开的类别
+    openType: '', // 打开的类别
+    filterdata: {} // 筛选数据
+  }
+
+  componentDidMount() {
+    this.getFilterData() // 获取筛选数据
+  }
+
+  /* 获取筛选数据 */
+  async getFilterData() {
+    let city = await getCurrentCity()
+    let res = await axios(`/houses/condition?id=${city.value}`)
+    this.setState({
+      filterdata: res.data.body
+    })
   }
 
   // 点击标题状态
