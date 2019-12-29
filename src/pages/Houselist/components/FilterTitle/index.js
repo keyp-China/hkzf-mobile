@@ -15,14 +15,18 @@ const titleList = [
 // 类组件是 this.props
 // 函数组件是 参数props
 export default function FilterTitle(props) {
-  // 父组件获取每个标题高亮状态
-  let { titleSelectedStatus } = props
+  // 父组件获取值
+  let { titleSelectedStatus, onTitleClick } = props
   return (
     <Flex align="center" className={styles.root}>
       {titleList.map(item => {
         // 判断是否选中
         let isSelected = titleSelectedStatus[item.type]
-        return <Flex.Item key={item.type}>
+        return <Flex.Item key={item.type}
+          onClick={() => {
+            // 修改title状态为高亮
+            onTitleClick(item.type, true)
+          }}>
           {/* 选中类名： styles.selected */}
           <span className={[styles.dropdown, isSelected ? styles.selected : ''].join(' ')}>
             <span>{item.title}</span>
