@@ -16,10 +16,18 @@ const titleSelectedStatus = {
   price: false, // 租金
   more: false // 筛选
 }
+// PickerView的默认选中值
+const selectedValue = {
+  area: ["area", "null"],
+  mode: ["null"],
+  price: ["null"],
+  more: []
+}
 
 export default class Filter extends Component {
   state = {
     titleSelectedStatus, // 标题高亮状态
+    selectedValue, // 默认选中的值
     openType: '', // 打开的类别
     filterdata: {} // 筛选数据
   }
@@ -50,7 +58,7 @@ export default class Filter extends Component {
 
   /* 渲染Picker() */
   renderPicker() {
-    let { openType, filterdata } = this.state
+    let { openType, filterdata, selectedValue } = this.state
     /* 区域、特点、楼层、朝向、租金、方式、房间类型、地铁 */
     let { area, characteristic, floor, oriented, price, rentType, roomType, subway } = filterdata
     // 区域:area  方式:mode  租金:price
@@ -71,8 +79,11 @@ export default class Filter extends Component {
       }
 
       return <FilterPicker
+        key={openType} // 当key值改变时组件会重新初始化更新defaultvalue
         data={data} // 显示数据
         cols={cols} // 显示列数
+        defaultvalue={selectedValue[openType]} // 默认值
+        type={openType}
         onCancel={this.onCancel}
         onSave={this.onSave}
       />
@@ -94,9 +105,13 @@ export default class Filter extends Component {
     })
   }
   /* 确定函数 */
-  onSave = () => {
+  onSave = (type, value) => {
     this.setState({
-      openType: ''
+      openType: '',
+      selectedValue: {
+        ...this.state.selectedValue,
+        [type]: value
+      }
     })
   }
 
