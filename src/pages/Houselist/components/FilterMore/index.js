@@ -29,7 +29,6 @@ export default class FilterMore extends Component {
 
   /* 点击标签事件 */
   onTagClick = (id) => {
-    console.log(id);
     let newValues = [...this.state.values]
     let index = newValues.indexOf(id)
     if (index == -1) {
