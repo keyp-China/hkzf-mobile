@@ -47,11 +47,29 @@ export default class Filter extends Component {
 
   // 点击标题状态
   onTitleClick = (type) => {
+    // 点击的标题高亮 有值的标题高亮
+    let { selectedValue, titleSelectedStatus } = this.state
+    let newtitleSelectedStatus = { ...titleSelectedStatus }
+    for (let key in newtitleSelectedStatus) { // key:area、mode、price、more
+      if (key == type) {
+        newtitleSelectedStatus[key] = true
+        continue; // 结束本次循环 进行下次循环
+      }
+      let selectedVal = selectedValue[key]
+      if (key == 'area' && (selectedVal.length !== 2 || selectedVal[0] !== 'area')) {//有值area选中
+        newtitleSelectedStatus[key] = true;
+      } else if (key == 'mode' && selectedVal[0] !== 'null') {//有值mode应该选中
+        newtitleSelectedStatus[key] = true;
+      } else if (key == "price" && selectedVal[0] !== 'null') {//有值 price应该选中
+        newtitleSelectedStatus[key] = true;
+      } else if (key == "more" && selectedVal.length != 0) {//more有值应该选中
+        //  more要选中
+      } else {
+        newtitleSelectedStatus[key] = false;//没有值 不选中
+      }
+    }
     this.setState({
-      titleSelectedStatus: {
-        ...this.state.titleSelectedStatus,
-        [type]: true
-      },
+      titleSelectedStatus: newtitleSelectedStatus,
       openType: type
     })
   }
