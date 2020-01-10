@@ -6,7 +6,7 @@ import styles from './index.module.css'
 
 export default class FilterMore extends Component {
   state = {
-    values: [] // 选中标签集合
+    values: this.props.defaultvalue // 选中标签集合
   }
 
   // 渲染标签
@@ -43,7 +43,7 @@ export default class FilterMore extends Component {
 
   render() {
     /* roomType, oriented, floor, characteristic */
-    let { data } = this.props
+    let { data, onSave, type } = this.props
     return (
       <div className={styles.root}>
         {/* 遮罩层 */}
@@ -73,6 +73,9 @@ export default class FilterMore extends Component {
             this.setState({
               values: []
             })
+          }}
+          onSave={() => {
+            onSave(type, this.state.values)
           }}
         />
       </div>

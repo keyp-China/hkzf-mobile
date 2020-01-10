@@ -126,8 +126,14 @@ export default class Filter extends Component {
   /* 渲染More */
   renderMore() {
     let { roomType, oriented, floor, characteristic } = this.state.filterdata
-    if (this.state.openType == 'more') {
-      return <FilterMore data={{ roomType, oriented, floor, characteristic }} />
+    let { openType } = this.state
+    if (openType == 'more') {
+      return <FilterMore
+        data={{ roomType, oriented, floor, characteristic }}
+        onSave={this.onSave}
+        type={openType}
+        defaultvalue={this.state.selectedValue.more}
+      />
     }
     return null
   }
