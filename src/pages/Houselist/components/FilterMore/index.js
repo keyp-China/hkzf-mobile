@@ -67,7 +67,14 @@ export default class FilterMore extends Component {
         </div>
 
         {/* 底部按钮 */}
-        <FilterFooter className={styles.footer} />
+        <FilterFooter className={styles.footer}
+          cancelText="清除"
+          onCancel={() => {
+            this.setState({
+              values: []
+            })
+          }}
+        />
       </div>
     )
   }
