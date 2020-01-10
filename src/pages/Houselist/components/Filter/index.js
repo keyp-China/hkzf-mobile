@@ -123,6 +123,14 @@ export default class Filter extends Component {
     }
     return null
   }
+  /* 渲染More */
+  renderMore(){
+    if(this.state.openType == 'more'){
+      return <FilterMore />
+    }
+    return null
+  }
+
   /* 取消函数 opentype='' */
   onCancel = (type) => {
     let { titleSelectedStatus, selectedValue } = this.state
@@ -170,6 +178,7 @@ export default class Filter extends Component {
 
           {/* 最后一个菜单对应的内容： */}
           {/* <FilterMore /> */}
+          {this.renderMore()}
         </div>
       </div>
     )
