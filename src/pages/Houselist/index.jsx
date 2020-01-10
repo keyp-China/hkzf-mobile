@@ -3,13 +3,16 @@ import SeachHeader from '../../components/SeachHeader'
 import { getCurrentCity } from '../../utils/index.js'
 import Filter from './components/Filter'
 import { axios } from '../../utils/axios'
+import { List, AutoSizer } from 'react-virtualized' // react-virtualized可视区域渲染
 
+import styles from './houselist.module.css'
 import './houselist.scss'
 
 export default class Houselist extends React.Component {
     state = {
         cityname: '',
-        cityid: ''
+        cityid: '',
+        list: []
     }
 
     async componentDidMount() {
@@ -30,12 +33,50 @@ export default class Houselist extends React.Component {
     /* 获取筛选房屋数据 */
     gethouselist = async () => {
         let res = await axios('/houses', {
-            cityid: this.state.cityid,
-            ...this.filters,
-            start: 1,
-            end: 20
+            params: {
+                cityid: this.state.cityid,
+                ...this.filters,
+                start: 1,
+                end: 20
+            }
         })
-        console.log(res);
+        this.setState({
+            list: res.data.body.list
+        })
+    }
+
+    /* 房屋列表每行数据 */
+    rowRenderer = ({
+        key, // 唯一key
+        index, // 索引01234
+        style, // 必加 不加无样式
+    }) => {
+        let item = this.state.list[index]
+        return (
+            <div key={key} style={style}>
+                <div className={styles.house}>
+                    <div className={styles.imgWrap}>
+                        <img className={styles.img} src={`http://localhost:8080${item.houseImg}`} alt="" />
+                    </div>
+                    <div className={styles.content}>
+                        <h3 className={styles.title}>{item.title}</h3>
+                        <div className={styles.desc}>{item.desc}</div>
+                        <div>
+                            {/* ['近地铁','随时看房'] */}
+                            {item.tags.map((v, i) => {
+                                let tagclass = `tag${i % 3 + 1}`
+                                return <span className={[styles.tag, styles[tagclass]].join(' ')} key={i}>
+                                    {v}
+                                </span>
+                            })}
+                        </div>
+                        <div className={styles.price}>
+                            <span className={styles.priceNum}>{item.price}</span> 元/月
+                </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     render() {
@@ -48,6 +89,19 @@ export default class Houselist extends React.Component {
 
             {/* 筛选功能 */}
             <Filter onFilter={this.onFilter}></Filter>
+
+            {/* 房屋列表 */}
+            <AutoSizer>
+                {({ height, width }) => {
+                    return <List
+                        width={width} // 列表宽度
+                        height={height} // 列表高度
+                        rowCount={this.state.list.length} // 数组长度多少行
+                        rowHeight={120} // 每行的高度
+                        rowRenderer={this.rowRenderer} // 渲染每行的内容
+                    />
+                }}
+            </AutoSizer>
         </div>
     }
 }
