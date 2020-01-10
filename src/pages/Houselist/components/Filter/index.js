@@ -162,6 +162,25 @@ export default class Filter extends Component {
         [type]: value
       },
       titleSelectedStatus: newtitleSelectedStatus
+    }, () => {
+      let newselectedValue = { ...this.state.selectedValue }
+      // 改造数据
+      let area = newselectedValue['area'][0] // 区域 值为area或者subway
+      let areaValue = 'null'
+      if (newselectedValue['area'].length === 3) {
+        areaValue = newselectedValue['area'][2] != 'null' ? newselectedValue['area'][2] : newselectedValue['area'][1]
+      }
+      let mode = newselectedValue['mode'][0] // 方式
+      let price = newselectedValue['price'][0] // 价格
+      let more = newselectedValue['more'].join(',') // 筛选
+      let filters = {
+        [area]: areaValue,
+        mode,
+        price,
+        more
+      }
+      // 将值传给houselist组件
+      this.props.onFilter(filters)
     })
   }
 

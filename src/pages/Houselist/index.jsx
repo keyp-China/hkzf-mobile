@@ -2,19 +2,40 @@ import React from "react"
 import SeachHeader from '../../components/SeachHeader'
 import { getCurrentCity } from '../../utils/index.js'
 import Filter from './components/Filter'
+import { axios } from '../../utils/axios'
 
 import './houselist.scss'
 
 export default class Houselist extends React.Component {
     state = {
-        cityname: ''
+        cityname: '',
+        cityid: ''
     }
 
     async componentDidMount() {
         let city = await getCurrentCity()
         this.setState({
-            cityname: city.label
+            cityname: city.label,
+            cityid: city.value
         })
+    }
+
+    /* houselist获取filter的值 */
+    onFilter = (filters) => {
+        console.log(filters);
+        this.filters = filters
+        this.gethouselist()
+    }
+
+    /* 获取筛选房屋数据 */
+    gethouselist = async () => {
+        let res = await axios('/houses', {
+            cityid: this.state.cityid,
+            ...this.filters,
+            start: 1,
+            end: 20
+        })
+        console.log(res);
     }
 
     render() {
@@ -26,7 +47,7 @@ export default class Houselist extends React.Component {
             </div>
 
             {/* 筛选功能 */}
-            <Filter></Filter>
+            <Filter onFilter={this.onFilter}></Filter>
         </div>
     }
 }
