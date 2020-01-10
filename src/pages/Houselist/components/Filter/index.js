@@ -133,6 +133,7 @@ export default class Filter extends Component {
         onSave={this.onSave}
         type={openType}
         defaultvalue={this.state.selectedValue.more}
+        onCancel={this.onCancel}
       />
     }
     return null
