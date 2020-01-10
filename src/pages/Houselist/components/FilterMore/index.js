@@ -5,11 +5,40 @@ import FilterFooter from '../../../../components/FilterFooter'
 import styles from './index.module.css'
 
 export default class FilterMore extends Component {
+  state = {
+    values: [] // 选中标签集合
+  }
+
   // 渲染标签
   renderFilters(arr) {
     // 高亮类名： styles.tagActive
     return arr.map(item => {
-      return <span className={[styles.tag].join(' ')} key={item.value}>{item.label}</span>
+      // 是否高亮选中
+      let isSelect = this.state.values.includes(item.value)
+      return <span
+        className={[styles.tag, isSelect ? styles.tagActive : ''].join(' ')}
+        key={item.value}
+        onClick={() => {
+          this.onTagClick(item.value)
+        }}
+      >
+        {item.label}
+      </span>
+    })
+  }
+
+  /* 点击标签事件 */
+  onTagClick = (id) => {
+    console.log(id);
+    let newValues = [...this.state.values]
+    let index = newValues.indexOf(id)
+    if (index == -1) {
+      newValues.push(id)
+    } else {
+      newValues.splice(index, 1)
+    }
+    this.setState({
+      values: newValues
     })
   }
 
