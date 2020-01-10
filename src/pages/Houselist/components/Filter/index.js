@@ -56,22 +56,29 @@ export default class Filter extends Component {
         continue; // 结束本次循环 进行下次循环
       }
       let selectedVal = selectedValue[key]
-      if (key == 'area' && (selectedVal.length !== 2 || selectedVal[0] !== 'area')) {//有值area选中
-        newtitleSelectedStatus[key] = true;
-      } else if (key == 'mode' && selectedVal[0] !== 'null') {//有值mode应该选中
-        newtitleSelectedStatus[key] = true;
-      } else if (key == "price" && selectedVal[0] !== 'null') {//有值 price应该选中
-        newtitleSelectedStatus[key] = true;
-      } else if (key == "more" && selectedVal.length != 0) {//more有值应该选中
-        //  more要选中
-      } else {
-        newtitleSelectedStatus[key] = false;//没有值 不选中
-      }
+      // 处理是否有值高亮判断
+      newtitleSelectedStatus = this.isNullValue(key, selectedVal, newtitleSelectedStatus)
     }
     this.setState({
       titleSelectedStatus: newtitleSelectedStatus,
       openType: type
     })
+  }
+
+  /* 处理是否有值高亮判断 */
+  isNullValue(key, selectedVal, newtitleSelectedStatus) {
+    if (key == 'area' && (selectedVal.length !== 2 || selectedVal[0] !== 'area')) {//有值area选中
+      newtitleSelectedStatus[key] = true;
+    } else if (key == 'mode' && selectedVal[0] !== 'null') {//有值mode应该选中
+      newtitleSelectedStatus[key] = true;
+    } else if (key == "price" && selectedVal[0] !== 'null') {//有值 price应该选中
+      newtitleSelectedStatus[key] = true;
+    } else if (key == "more" && selectedVal.length != 0) {//more有值应该选中
+      //  more要选中
+    } else {
+      newtitleSelectedStatus[key] = false;//没有值 不选中
+    }
+    return newtitleSelectedStatus
   }
 
   /* 渲染Picker() */
@@ -117,19 +124,28 @@ export default class Filter extends Component {
     return null
   }
   /* 取消函数 opentype='' */
-  onCancel = () => {
+  onCancel = (type) => {
+    let { titleSelectedStatus, selectedValue } = this.state
+    let newtitleSelectedStatus = { ...titleSelectedStatus }
+    // 处理是否有值高亮判断
+    newtitleSelectedStatus = this.isNullValue(type, selectedValue[type], newtitleSelectedStatus)
     this.setState({
-      openType: ''
+      openType: '',
+      titleSelectedStatus: newtitleSelectedStatus
     })
   }
   /* 确定函数 */
   onSave = (type, value) => {
+    let newtitleSelectedStatus = { ...this.state.titleSelectedStatus }
+    // 处理是否有值高亮判断
+    newtitleSelectedStatus = this.isNullValue(type, value, newtitleSelectedStatus)
     this.setState({
       openType: '',
       selectedValue: {
         ...this.state.selectedValue,
         [type]: value
-      }
+      },
+      titleSelectedStatus: newtitleSelectedStatus
     })
   }
 
