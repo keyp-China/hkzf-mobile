@@ -3,7 +3,7 @@ import SeachHeader from '../../components/SeachHeader'
 import { getCurrentCity } from '../../utils/index.js'
 import Filter from './components/Filter'
 import { axios } from '../../utils/axios'
-import { List, AutoSizer } from 'react-virtualized' // react-virtualized可视区域渲染
+import { List, AutoSizer, WindowScroller } from 'react-virtualized' // react-virtualized可视区域渲染
 
 import styles from './houselist.module.css'
 import './houselist.scss'
@@ -35,7 +35,6 @@ export default class Houselist extends React.Component {
 
     /* 获取筛选房屋数据 */
     gethouselist = async () => {
-        console.log(this.state.cityid);
         let res = await axios('/houses', {
             params: {
                 cityId: this.state.cityid,
@@ -95,17 +94,24 @@ export default class Houselist extends React.Component {
             <Filter onFilter={this.onFilter}></Filter>
 
             {/* 房屋列表 */}
-            <AutoSizer>
-                {({ height, width }) => {
-                    return <List
-                        width={width} // 列表宽度
-                        height={height} // 列表高度
-                        rowCount={this.state.list.length} // 数组长度多少行
-                        rowHeight={120} // 每行的高度
-                        rowRenderer={this.rowRenderer} // 渲染每行的内容
-                    />
-                }}
-            </AutoSizer>
+            <WindowScroller>
+                {/* WindowScroller让整个页面一起滚动 */}
+                {({ height }) => (
+                    <AutoSizer>
+                        {/* AutoSizer为了占满整个屏幕 */}
+                        {({ width }) => (
+                            <List
+                                autoHeight // 使用WindowScroller必须加
+                                width={width} // 列表宽度
+                                height={height} // 列表高度
+                                rowCount={this.state.list.length} // 数组长度多少行
+                                rowHeight={120} // 每行的高度
+                                rowRenderer={this.rowRenderer} // 渲染每行的内容
+                            />
+                        )}
+                    </AutoSizer>
+                )}
+            </WindowScroller>
         </div>
     }
 }
