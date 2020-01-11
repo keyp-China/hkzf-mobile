@@ -14,27 +14,31 @@ export default class Houselist extends React.Component {
         cityid: '',
         list: []
     }
+    filters = {}
 
     async componentDidMount() {
         let city = await getCurrentCity()
         this.setState({
             cityname: city.label,
             cityid: city.value
+        }, () => {
+            this.gethouselist()
         })
+
     }
 
     /* houselist获取filter的值 */
     onFilter = (filters) => {
-        console.log(filters);
         this.filters = filters
         this.gethouselist()
     }
 
     /* 获取筛选房屋数据 */
     gethouselist = async () => {
+        console.log(this.state.cityid);
         let res = await axios('/houses', {
             params: {
-                cityid: this.state.cityid,
+                cityId: this.state.cityid,
                 ...this.filters,
                 start: 1,
                 end: 20
