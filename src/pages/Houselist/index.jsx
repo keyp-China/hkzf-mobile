@@ -83,28 +83,32 @@ export default class Houselist extends React.Component {
         style, // 必加 不加无样式
     }) => {
         let item = this.state.list[index]
+        if (!item) {
+            // 没数据则先用loading来占位
+            return <div key={key} style={style}>
+                ...loading
+            </div>
+        }
         return (
-            <div key={key} style={style}>
-                <div className={styles.house}>
-                    <div className={styles.imgWrap}>
-                        <img className={styles.img} src={`http://localhost:8080${item.houseImg}`} alt="" />
-                    </div>
-                    <div className={styles.content}>
-                        <h3 className={styles.title}>{item.title}</h3>
-                        <div className={styles.desc}>{item.desc}</div>
-                        <div>
-                            {/* ['近地铁','随时看房'] */}
-                            {item.tags.map((v, i) => {
-                                let tagclass = `tag${i % 3 + 1}`
-                                return <span className={[styles.tag, styles[tagclass]].join(' ')} key={i}>
-                                    {v}
-                                </span>
-                            })}
-                        </div>
-                        <div className={styles.price}>
-                            <span className={styles.priceNum}>{item.price}</span> 元/月
+            <div key={key} style={style} className={styles.house}>
+                <div className={styles.imgWrap}>
+                    <img className={styles.img} src={`http://localhost:8080${item.houseImg}`} alt="" />
                 </div>
+                <div className={styles.content}>
+                    <h3 className={styles.title}>{item.title}</h3>
+                    <div className={styles.desc}>{item.desc}</div>
+                    <div>
+                        {/* ['近地铁','随时看房'] */}
+                        {item.tags.map((v, i) => {
+                            let tagclass = `tag${i % 3 + 1}`
+                            return <span className={[styles.tag, styles[tagclass]].join(' ')} key={i}>
+                                {v}
+                            </span>
+                        })}
                     </div>
+                    <div className={styles.price}>
+                        <span className={styles.priceNum}>{item.price}</span> 元/月
+                </div>
                 </div>
             </div>
         );
