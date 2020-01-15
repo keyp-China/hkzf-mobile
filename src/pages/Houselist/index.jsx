@@ -3,7 +3,7 @@ import SeachHeader from '../../components/SeachHeader'
 import { getCurrentCity } from '../../utils/index.js'
 import Filter from './components/Filter'
 import { axios } from '../../utils/axios'
-import { List, AutoSizer, WindowScroller } from 'react-virtualized' // react-virtualized可视区域渲染
+import { List, AutoSizer, WindowScroller, InfiniteLoader } from 'react-virtualized' // react-virtualized可视区域渲染
 
 import styles from './houselist.module.css'
 import './houselist.scss'
@@ -12,7 +12,8 @@ export default class Houselist extends React.Component {
     state = {
         cityname: '',
         cityid: '',
-        list: []
+        list: [],
+        count: 0
     }
     filters = {}
 
@@ -44,7 +45,34 @@ export default class Houselist extends React.Component {
             }
         })
         this.setState({
-            list: res.data.body.list
+            list: res.data.body.list,
+            count: res.data.body.count
+        })
+    }
+
+    /* 是否加载更多数据 */
+    isRowLoaded = ({ index }) => {
+        return !!this.state.list[index]; // 隐式转换成布尔
+    }
+
+    /* 加载更多数据 */
+    loadMoreRows = ({ startIndex, stopIndex }) => {
+        return new Promise((resolve) => {
+            axios('/houses', {
+                params: {
+                    cityId: this.state.cityid,
+                    ...this.filters,
+                    start: startIndex,
+                    end: stopIndex
+                }
+            }).then(res => {
+                this.setState({
+                    list: [...this.state.list, ...res.data.body.list]
+                })
+                // 成功这个promise必须写resolve 表示完成
+                resolve()
+            })
+
         })
     }
 
@@ -94,24 +122,38 @@ export default class Houselist extends React.Component {
             <Filter onFilter={this.onFilter}></Filter>
 
             {/* 房屋列表 */}
-            <WindowScroller>
-                {/* WindowScroller让整个页面一起滚动 */}
-                {({ height }) => (
-                    <AutoSizer>
-                        {/* AutoSizer为了占满整个屏幕 */}
-                        {({ width }) => (
-                            <List
-                                autoHeight // 使用WindowScroller必须加
-                                width={width} // 列表宽度
-                                height={height} // 列表高度
-                                rowCount={this.state.list.length} // 数组长度多少行
-                                rowHeight={120} // 每行的高度
-                                rowRenderer={this.rowRenderer} // 渲染每行的内容
-                            />
+            <InfiniteLoader
+                isRowLoaded={this.isRowLoaded}  // 是否加载
+                loadMoreRows={this.loadMoreRows} // 加载更多
+                rowCount={this.state.count}  // 总条数
+                minimumBatchSize={10} // 默认就是10条
+            >
+                {({ onRowsRendered, registerChild }) => (
+                    <WindowScroller>
+                        {/* WindowScroller让整个页面一起滚动 */}
+                        {({ height, isScrolling, onChildScroll, scrollTop }) => (
+                            <AutoSizer>
+                                {/* AutoSizer为了占满整个屏幕 */}
+                                {({ width }) => (
+                                    <List
+                                        autoHeight // 使用WindowScroller必须加
+                                        width={width} // 列表宽度
+                                        height={height} // 列表高度
+                                        rowCount={this.state.count} // 总条数
+                                        rowHeight={120} // 每行的高度
+                                        rowRenderer={this.rowRenderer} // 渲染每行的内容
+                                        onRowsRendered={onRowsRendered} // list滚动调用
+                                        ref={registerChild} // 获取组件
+                                        isScrolling={isScrolling}
+                                        onScroll={onChildScroll}
+                                        scrollTop={scrollTop}
+                                    />
+                                )}
+                            </AutoSizer>
                         )}
-                    </AutoSizer>
+                    </WindowScroller>
                 )}
-            </WindowScroller>
+            </InfiniteLoader>
         </div>
     }
 }
