@@ -3,6 +3,7 @@ import SeachHeader from '../../components/SeachHeader'
 import { getCurrentCity } from '../../utils/index.js'
 import Filter from './components/Filter'
 import Sticky from '../../components/Sticky' // 吸顶组件
+import NoHouse from '../../components/NoHouse' // 无房组件
 import { axios } from '../../utils/axios'
 import { Toast } from 'antd-mobile'
 import { List, AutoSizer, WindowScroller, InfiniteLoader } from 'react-virtualized' // react-virtualized可视区域渲染
@@ -15,7 +16,8 @@ export default class Houselist extends React.Component {
         cityname: '',
         cityid: '',
         list: [],
-        count: 0
+        count: 0,
+        isloading: false // 数据还在加载中
     }
     filters = {}
 
@@ -53,7 +55,8 @@ export default class Houselist extends React.Component {
         Toast.info(`总共有${res.data.body.count}套房源`, 1.5)
         this.setState({
             list: res.data.body.list,
-            count: res.data.body.count
+            count: res.data.body.count,
+            isloading: true
         })
     }
 
@@ -121,6 +124,44 @@ export default class Houselist extends React.Component {
         );
     }
 
+    renderHouseList = () => {
+        if (this.state.isloading && this.state.count == 0) {
+            return <NoHouse>暂无更多房源</NoHouse>
+        }
+        return <InfiniteLoader
+            isRowLoaded={this.isRowLoaded}  // 是否加载
+            loadMoreRows={this.loadMoreRows} // 加载更多
+            rowCount={this.state.count}  // 总条数
+            minimumBatchSize={10} // 默认就是10条
+        >
+            {({ onRowsRendered, registerChild }) => (
+                <WindowScroller>
+                    {/* WindowScroller让整个页面一起滚动 */}
+                    {({ height, isScrolling, onChildScroll, scrollTop }) => (
+                        <AutoSizer>
+                            {/* AutoSizer为了占满整个屏幕 */}
+                            {({ width }) => (
+                                <List
+                                    autoHeight // 使用WindowScroller必须加
+                                    width={width} // 列表宽度
+                                    height={height} // 列表高度
+                                    rowCount={this.state.count} // 总条数
+                                    rowHeight={120} // 每行的高度
+                                    rowRenderer={this.rowRenderer} // 渲染每行的内容
+                                    onRowsRendered={onRowsRendered} // list滚动调用
+                                    ref={registerChild} // 获取组件
+                                    isScrolling={isScrolling}
+                                    onScroll={onChildScroll}
+                                    scrollTop={scrollTop}
+                                />
+                            )}
+                        </AutoSizer>
+                    )}
+                </WindowScroller>
+            )}
+        </InfiniteLoader>
+    }
+
     render() {
         return <div className="houselist">
             {/* 顶部搜索栏 */}
@@ -136,38 +177,7 @@ export default class Houselist extends React.Component {
             </Sticky>
 
             {/* 房屋列表 */}
-            <InfiniteLoader
-                isRowLoaded={this.isRowLoaded}  // 是否加载
-                loadMoreRows={this.loadMoreRows} // 加载更多
-                rowCount={this.state.count}  // 总条数
-                minimumBatchSize={10} // 默认就是10条
-            >
-                {({ onRowsRendered, registerChild }) => (
-                    <WindowScroller>
-                        {/* WindowScroller让整个页面一起滚动 */}
-                        {({ height, isScrolling, onChildScroll, scrollTop }) => (
-                            <AutoSizer>
-                                {/* AutoSizer为了占满整个屏幕 */}
-                                {({ width }) => (
-                                    <List
-                                        autoHeight // 使用WindowScroller必须加
-                                        width={width} // 列表宽度
-                                        height={height} // 列表高度
-                                        rowCount={this.state.count} // 总条数
-                                        rowHeight={120} // 每行的高度
-                                        rowRenderer={this.rowRenderer} // 渲染每行的内容
-                                        onRowsRendered={onRowsRendered} // list滚动调用
-                                        ref={registerChild} // 获取组件
-                                        isScrolling={isScrolling}
-                                        onScroll={onChildScroll}
-                                        scrollTop={scrollTop}
-                                    />
-                                )}
-                            </AutoSizer>
-                        )}
-                    </WindowScroller>
-                )}
-            </InfiniteLoader>
+            {this.renderHouseList()}
         </div>
     }
 }
