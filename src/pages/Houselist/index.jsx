@@ -32,6 +32,8 @@ export default class Houselist extends React.Component {
 
     /* houselist获取filter的值 */
     onFilter = (filters) => {
+        // 重新筛选时 返回顶部
+        window.scrollTo(0, 0)
         this.filters = filters
         this.gethouselist()
     }
