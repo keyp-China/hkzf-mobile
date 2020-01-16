@@ -8,9 +8,9 @@ export default class Sticky extends React.Component {
     componentDidMount() {
         window.addEventListener("scroll", this.handlerScroll)
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         // 销毁组件时 删除事件监听
-        window.removeEventListener('scroll',this.handlerScroll)
+        window.removeEventListener('scroll', this.handlerScroll)
     }
 
     /* 滚动事件函数 */
@@ -23,6 +23,7 @@ export default class Sticky extends React.Component {
             cDiv.style.position = 'fixed'
             cDiv.style.top = '0'
             cDiv.style.width = '100%'
+            cDiv.style.zIndex = "1"
             // 解决跳一下的问题 空div设置和内容区域一样的高度
             pDiv.style.height = `${this.props.height}px`
         } else { // 还原
