@@ -4,6 +4,7 @@ import { getCurrentCity } from '../../utils/index.js'
 import Filter from './components/Filter'
 import Sticky from '../../components/Sticky' // 吸顶组件
 import { axios } from '../../utils/axios'
+import { Toast } from 'antd-mobile'
 import { List, AutoSizer, WindowScroller, InfiniteLoader } from 'react-virtualized' // react-virtualized可视区域渲染
 
 import styles from './houselist.module.css'
@@ -37,6 +38,7 @@ export default class Houselist extends React.Component {
 
     /* 获取筛选房屋数据 */
     gethouselist = async () => {
+        Toast.loading("正在加载中...", 0)
         let res = await axios('/houses', {
             params: {
                 cityId: this.state.cityid,
@@ -45,6 +47,8 @@ export default class Houselist extends React.Component {
                 end: 20
             }
         })
+        // Toast.hide()
+        Toast.info(`总共有${res.data.body.count}套房源`, 1.5)
         this.setState({
             list: res.data.body.list,
             count: res.data.body.count
