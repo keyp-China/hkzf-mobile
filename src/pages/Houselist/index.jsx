@@ -7,6 +7,7 @@ import NoHouse from '../../components/NoHouse' // 无房组件
 import { axios } from '../../utils/axios'
 import { Toast } from 'antd-mobile'
 import { List, AutoSizer, WindowScroller, InfiniteLoader } from 'react-virtualized' // react-virtualized可视区域渲染
+import { Spring } from 'react-spring/renderprops'
 
 import styles from './houselist.module.css'
 import './houselist.scss'
@@ -165,10 +166,16 @@ export default class Houselist extends React.Component {
     render() {
         return <div className="houselist">
             {/* 顶部搜索栏 */}
-            <div className="seach">
-                <i className="iconfont icon-back" onClick={() => this.props.history.go(-1)}></i>
-                <SeachHeader cityname={this.state.cityname}></SeachHeader>
-            </div>
+            <Spring
+                from={{ opacity: 0 }}
+                to={{ opacity: 1 }}
+            >
+                {(props) => <div className="seach" style={props}>
+                    <i className="iconfont icon-back" onClick={() => this.props.history.go(-1)}></i>
+                    <SeachHeader cityname={this.state.cityname}></SeachHeader>
+                </div>
+                }
+            </Spring>
 
             {/* 筛选功能 */}
             {/* Sticky是自己封装的吸顶组件 */}
