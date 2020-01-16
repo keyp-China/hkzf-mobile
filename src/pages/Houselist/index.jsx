@@ -2,6 +2,7 @@ import React from "react"
 import SeachHeader from '../../components/SeachHeader'
 import { getCurrentCity } from '../../utils/index.js'
 import Filter from './components/Filter'
+import Sticky from '../../components/Sticky' // 吸顶组件
 import { axios } from '../../utils/axios'
 import { List, AutoSizer, WindowScroller, InfiniteLoader } from 'react-virtualized' // react-virtualized可视区域渲染
 
@@ -123,7 +124,10 @@ export default class Houselist extends React.Component {
             </div>
 
             {/* 筛选功能 */}
-            <Filter onFilter={this.onFilter}></Filter>
+            {/* Sticky是自己封装的吸顶组件 */}
+            <Sticky height={40}>
+                <Filter onFilter={this.onFilter}></Filter>
+            </Sticky>
 
             {/* 房屋列表 */}
             <InfiniteLoader
