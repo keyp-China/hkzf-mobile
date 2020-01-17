@@ -6,6 +6,7 @@ import NavHeader from '../../components/NavHeader'
 import HouseItem from '../../components/HouseItem'
 import HousePackage from '../../components/HousePackage'
 
+import { axios } from '../../utils/axios'
 import { BASE_URL } from '../../utils/url'
 
 import styles from './index.module.css'
@@ -62,7 +63,7 @@ export default class HouseDetail extends Component {
 
     houseInfo: {
       // 房屋图片
-      slides: [],
+      houseImg: [],
       // 标题
       title: '',
       // 标签
@@ -70,11 +71,11 @@ export default class HouseDetail extends Component {
       // 租金
       price: 0,
       // 房型
-      roomType: '两室一厅',
+      roomType: '',
       // 房屋面积
       size: 89,
       // 装修类型
-      renovation: '精装',
+      renovation: '',
       // 朝向
       oriented: [],
       // 楼层
@@ -96,22 +97,31 @@ export default class HouseDetail extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.match.params.id);
+    // console.log(this.props.match.params.id);
+    this.getDetail(this.props.match.params.id)
     this.renderMap('天山星城', {
       latitude: '31.219228',
       longitude: '121.391768'
     })
   }
 
+  /* 获取详情数据 */
+  getDetail = async (id) => {
+    let res = await axios(`/houses/${id}`)
+    this.setState({
+      houseInfo: res.data.body
+    })
+  }
+
   // 渲染轮播图结构
   renderSwipers() {
     const {
-      houseInfo: { slides }
+      houseInfo: { houseImg }
     } = this.state
 
-    return slides.map(item => (
+    return houseImg.map(item => (
       <a
-        key={item.id}
+        key={item}
         href="http://itcast.cn"
         style={{
           display: 'inline-block',
@@ -120,7 +130,7 @@ export default class HouseDetail extends Component {
         }}
       >
         <img
-          src={BASE_URL + item.imgSrc}
+          src={BASE_URL + item}
           alt=""
           style={{ width: '100%', verticalAlign: 'top' }}
         />
