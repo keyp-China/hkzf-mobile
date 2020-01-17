@@ -12,6 +12,22 @@ import styles from './index.module.css'
 // const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
 
 class Login extends Component {
+  state = {
+    username: '',
+    password: ''
+  }
+
+  getusername = (e) => {
+    this.setState({
+      username: e.target.value
+    })
+  }
+  getpassword = (e) => {
+    this.setState({
+      password: e.target.value
+    })
+  }
+
   render() {
     return (
       <div className={styles.root}>
@@ -27,6 +43,7 @@ class Login extends Component {
                 className={styles.input}
                 name="username"
                 placeholder="请输入账号"
+                onChange={this.getusername}
               />
             </div>
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
@@ -37,6 +54,7 @@ class Login extends Component {
                 name="password"
                 type="password"
                 placeholder="请输入密码"
+                onChange={this.getpassword}
               />
             </div>
             {/* 长度为5到12位，只能出现数字、字母、下划线 */}
