@@ -7,6 +7,7 @@ import Home from "./pages/Home"
 import Citylist from "./pages/Citylist"
 import Map from "./pages/Map"
 import HouseDetail from "./pages/HouseDetail"
+import Login from "./pages/Login"
 
 export default class App extends React.Component {
     render() {
@@ -24,6 +25,7 @@ export default class App extends React.Component {
                 <Route path="/citylist" component={Citylist}></Route>
                 <Route path="/map" component={Map}></Route>
                 <Route path="/detail/:id" component={HouseDetail}></Route>
+                <Route path="/login" component={Login}></Route>
             </div>
         </Router>
     }
