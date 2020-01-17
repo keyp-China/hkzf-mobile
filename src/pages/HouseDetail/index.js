@@ -97,19 +97,19 @@ export default class HouseDetail extends Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.match.params.id);
     this.getDetail(this.props.match.params.id)
-    this.renderMap('天山星城', {
-      latitude: '31.219228',
-      longitude: '121.391768'
-    })
   }
 
   /* 获取详情数据 */
-  getDetail = async (id) => {
+  async getDetail(id) {
     let res = await axios(`/houses/${id}`)
+    console.log(res);
     this.setState({
       houseInfo: res.data.body
+    }, () => {
+      // 获取完数据后 渲染地图
+      let { community, coord } = this.state.houseInfo
+      this.renderMap(community, coord)
     })
   }
 
@@ -160,7 +160,7 @@ export default class HouseDetail extends Component {
   }
 
   render() {
-    const { isLoading } = this.state
+    const { isLoading, houseInfo } = this.state
     return (
       <div className={styles.root}>
         {/* 导航栏 */}
@@ -168,7 +168,7 @@ export default class HouseDetail extends Component {
           className={styles.navHeader}
           rightContent={[<i key="share" className="iconfont icon-share" />]}
         >
-          天山星城
+          {houseInfo.community}
         </NavHeader>
 
         {/* 轮播图 */}
@@ -185,30 +185,37 @@ export default class HouseDetail extends Component {
         {/* 房屋基础信息 */}
         <div className={styles.info}>
           <h3 className={styles.infoTitle}>
-            整租 · 精装修，拎包入住，配套齐Q，价格优惠
+            {houseInfo.title}
           </h3>
           <Flex className={styles.tags}>
-            <Flex.Item>
-              <span className={[styles.tag, styles.tag1].join(' ')}>
-                随时看房
-              </span>
-            </Flex.Item>
+            {
+              houseInfo.tags.map((item, key) => {
+                let styleTag = `tag${key % 3 + 1}`
+                console.log(styleTag);
+                return <Flex.Item key={key}>
+                  <span className={[styles.tag, styles[styleTag]].join(' ')}>
+                    {item}
+                  </span>
+                </Flex.Item>
+              })
+            }
+
           </Flex>
 
           <Flex className={styles.infoPrice}>
             <Flex.Item className={styles.infoPriceItem}>
               <div>
-                8500
+                {houseInfo.price}
                 <span className={styles.month}>/月</span>
               </div>
               <div>租金</div>
             </Flex.Item>
             <Flex.Item className={styles.infoPriceItem}>
-              <div>1室1厅1卫</div>
+              <div>{houseInfo.roomType}</div>
               <div>房型</div>
             </Flex.Item>
             <Flex.Item className={styles.infoPriceItem}>
-              <div>78平米</div>
+              <div>{houseInfo.size}平米</div>
               <div>面积</div>
             </Flex.Item>
           </Flex>
@@ -221,12 +228,13 @@ export default class HouseDetail extends Component {
               </div>
               <div>
                 <span className={styles.title}>楼层：</span>
-                低楼层
+                {houseInfo.floor}
               </div>
             </Flex.Item>
             <Flex.Item>
               <div>
-                <span className={styles.title}>朝向：</span>南
+                <span className={styles.title}>朝向：</span>
+                {houseInfo.oriented[0]}
               </div>
               <div>
                 <span className={styles.title}>类型：</span>普通住宅
@@ -239,7 +247,7 @@ export default class HouseDetail extends Component {
         <div className={styles.map}>
           <div className={styles.mapTitle}>
             小区：
-            <span>天山星城</span>
+            <span>{houseInfo.community}</span>
           </div>
           <div className={styles.mapContainer} id="map">
             地图
@@ -250,16 +258,7 @@ export default class HouseDetail extends Component {
         <div className={styles.about}>
           <div className={styles.houseTitle}>房屋配套</div>
           <HousePackage
-            list={[
-              '电视',
-              '冰箱',
-              '洗衣机',
-              '空调',
-              '热水器',
-              '沙发',
-              '衣柜',
-              '天然气'
-            ]}
+            list={houseInfo.supporting}
           />
           {/* <div className="title-empty">暂无数据</div> */}
         </div>
