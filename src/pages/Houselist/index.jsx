@@ -101,7 +101,10 @@ export default class Houselist extends React.Component {
             </div>
         }
         return (
-            <div key={key} style={style} className={styles.house}>
+            <div key={key} style={style} className={styles.house}
+                onClick={() => {
+                    this.props.history.push(`/detail/${item.houseCode}`)
+                }}>
                 <div className={styles.imgWrap}>
                     <img className={styles.img} src={`http://localhost:8080${item.houseImg}`} alt="" />
                 </div>
