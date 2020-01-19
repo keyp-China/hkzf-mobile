@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Flex, WingBlank, WhiteSpace, Toast } from 'antd-mobile'
 
-import { withFormik } from 'formik'
+import { withFormik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
 import { Link } from 'react-router-dom'
@@ -24,36 +24,34 @@ class Login extends Component {
 
         {/* 登录表单 */}
         <WingBlank>
-          <form onSubmit={handleSubmit}>
+          <Form>
             <div className={styles.formItem}>
-              <input
+              <Field
                 className={styles.input}
                 name="username"
+                type="text"
                 placeholder="请输入账号"
-                onChange={handleChange}
-                value={values.username}
               />
             </div>
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
-            {errors.username && <div className={styles.error}>{errors.username}</div>}
+            {/* {errors.username && <div className={styles.error}>{errors.username}</div>} */}
+            <ErrorMessage  className={styles.error}  name="username"  component="div"></ErrorMessage>
             <div className={styles.formItem}>
-              <input
+              <Field
                 className={styles.input}
                 name="password"
                 type="password"
                 placeholder="请输入密码"
-                onChange={handleChange}
-                value={values.password}
               />
             </div>
             {/* 长度为5到12位，只能出现数字、字母、下划线 */}
-            {errors.password && <div className={styles.error}>{errors.password}</div>}
+            <ErrorMessage  className={styles.error}  name="password"  component="div"></ErrorMessage>
             <div className={styles.formSubmit}>
               <button className={styles.submit} type="submit">
                 登 录
               </button>
             </div>
-          </form>
+          </Form>
           <Flex className={styles.backHome}>
             <Flex.Item>
               <Link to="/registe">还没有账号，去注册~</Link>
