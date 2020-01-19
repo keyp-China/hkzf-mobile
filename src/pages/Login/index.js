@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { Flex, WingBlank, WhiteSpace } from 'antd-mobile'
+import { Flex, WingBlank, WhiteSpace, Toast } from 'antd-mobile'
 
 import { Link } from 'react-router-dom'
 
 import NavHeader from '../../components/NavHeader'
+
+import { axios } from '../../utils/axios'
 
 import styles from './index.module.css'
 
@@ -17,16 +19,33 @@ class Login extends Component {
     password: ''
   }
 
+  /* 受控表单用户 */
   getusername = (e) => {
     this.setState({
       username: e.target.value
     })
   }
+  /* 受控表单密码 */
   getpassword = (e) => {
     this.setState({
       password: e.target.value
     })
   }
+
+  /* 提交表单 */
+  handlerSubmit = async (e) => {
+    e.preventDefault() // 阻止页面跳转
+    let { username, password } = this.state
+    let res = await axios.post('/user/login', { username, password })
+    if (res.data.status === 200) {
+      Toast.success('登陆成功', 2)
+    } else {
+      Toast.fail(res.data.description, 2)
+    }
+    console.log(res);
+  }
+
+
 
   render() {
     return (
@@ -37,7 +56,7 @@ class Login extends Component {
 
         {/* 登录表单 */}
         <WingBlank>
-          <form>
+          <form onSubmit={this.handlerSubmit}>
             <div className={styles.formItem}>
               <input
                 className={styles.input}
