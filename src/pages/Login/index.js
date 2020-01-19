@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Flex, WingBlank, WhiteSpace, Toast } from 'antd-mobile'
 
 import { withFormik } from 'formik'
+import * as Yup from 'yup'
 
 import { Link } from 'react-router-dom'
 
@@ -10,10 +11,6 @@ import NavHeader from '../../components/NavHeader'
 import { axios } from '../../utils/axios'
 
 import styles from './index.module.css'
-
-// 验证规则：
-// const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
-// const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
 
 class Login extends Component {
   render() {
@@ -84,8 +81,8 @@ export default withFormik({
     console.log(res);
   },
 
-  // 验证
-  validate: (values) => {
+  // 验证1：validate
+  /* validate: (values) => {
     let errors = {} // 存储错误信息
     if (!values.username) {
       errors.username = '用户名不能为空'
@@ -94,5 +91,13 @@ export default withFormik({
       errors.password = '密码不能为空'
     }
     return errors
-  }
+  } */
+
+  // 验证2：validationSchema配合Yup验证
+  validationSchema: Yup.object().shape({
+    // 名：检验规则  Yup链式编程 .matches(正则，错误提示)
+    username: Yup.string().required('用户名不能为空').matches(/^[a-zA-Z_\d]{5,8}$/, '用户名为5-8位'),
+    password: Yup.string().required('密码不能为空').matches(/^[a-zA-Z_\d]{5,12}$/, '密码为5-12位')
+  })
+
 })(Login)
