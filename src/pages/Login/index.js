@@ -18,7 +18,7 @@ import styles from './index.module.css'
 class Login extends Component {
   render() {
     // 使用withFormik可得 values相当于state 
-    let { values, handleChange, handleSubmit } = this.props
+    let { values, handleChange, handleSubmit, errors } = this.props
     return (
       <div className={styles.root}>
         {/* 顶部导航 */}
@@ -38,7 +38,7 @@ class Login extends Component {
               />
             </div>
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
-            {/* <div className={styles.error}>账号为必填项</div> */}
+            {errors.username && <div className={styles.error}>{errors.username}</div>}
             <div className={styles.formItem}>
               <input
                 className={styles.input}
@@ -50,7 +50,7 @@ class Login extends Component {
               />
             </div>
             {/* 长度为5到12位，只能出现数字、字母、下划线 */}
-            {/* <div className={styles.error}>账号为必填项</div> */}
+            {errors.password && <div className={styles.error}>{errors.password}</div>}
             <div className={styles.formSubmit}>
               <button className={styles.submit} type="submit">
                 登 录
@@ -82,5 +82,17 @@ export default withFormik({
       Toast.fail(res.data.description, 2)
     }
     console.log(res);
+  },
+
+  // 验证
+  validate: (values) => {
+    let errors = {} // 存储错误信息
+    if (!values.username) {
+      errors.username = '用户名不能为空'
+    }
+    if (!values.password) {
+      errors.password = '密码不能为空'
+    }
+    return errors
   }
 })(Login)
