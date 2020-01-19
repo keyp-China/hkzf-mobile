@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Flex, WingBlank, WhiteSpace, Toast } from 'antd-mobile'
 
+import { withFormik } from 'formik'
+
 import { Link } from 'react-router-dom'
 
 import NavHeader from '../../components/NavHeader'
@@ -14,40 +16,9 @@ import styles from './index.module.css'
 // const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
 
 class Login extends Component {
-  state = {
-    username: '',
-    password: ''
-  }
-
-  /* 受控表单用户 */
-  getusername = (e) => {
-    this.setState({
-      username: e.target.value
-    })
-  }
-  /* 受控表单密码 */
-  getpassword = (e) => {
-    this.setState({
-      password: e.target.value
-    })
-  }
-
-  /* 提交表单 */
-  handlerSubmit = async (e) => {
-    e.preventDefault() // 阻止页面跳转
-    let { username, password } = this.state
-    let res = await axios.post('/user/login', { username, password })
-    if (res.data.status === 200) {
-      Toast.success('登陆成功', 2)
-    } else {
-      Toast.fail(res.data.description, 2)
-    }
-    console.log(res);
-  }
-
-
-
   render() {
+    // 使用withFormik可得 values相当于state 
+    let { values, handleChange, handleSubmit } = this.props
     return (
       <div className={styles.root}>
         {/* 顶部导航 */}
@@ -56,13 +27,14 @@ class Login extends Component {
 
         {/* 登录表单 */}
         <WingBlank>
-          <form onSubmit={this.handlerSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className={styles.formItem}>
               <input
                 className={styles.input}
                 name="username"
                 placeholder="请输入账号"
-                onChange={this.getusername}
+                onChange={handleChange}
+                value={values.username}
               />
             </div>
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
@@ -73,7 +45,8 @@ class Login extends Component {
                 name="password"
                 type="password"
                 placeholder="请输入密码"
-                onChange={this.getpassword}
+                onChange={handleChange}
+                value={values.password}
               />
             </div>
             {/* 长度为5到12位，只能出现数字、字母、下划线 */}
@@ -95,4 +68,19 @@ class Login extends Component {
   }
 }
 
-export default Login
+// export default Login
+export default withFormik({
+  mapPropsToValues: () => ({ username: '', password: '' }), // 所有值都相当于state 提供初始数据
+
+  handleSubmit: async (values, { props }) => {
+    // e.preventDefault() // 阻止页面跳转
+    let { username, password } = values
+    let res = await axios.post('/user/login', { username, password })
+    if (res.data.status === 200) {
+      Toast.success('登陆成功', 2)
+    } else {
+      Toast.fail(res.data.description, 2)
+    }
+    console.log(res);
+  }
+})(Login)
