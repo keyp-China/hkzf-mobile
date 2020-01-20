@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Grid, Button } from 'antd-mobile'
 
 import { BASE_URL } from '../../utils/url'
+import { isAuth } from '../../utils'
 
 import styles from './index.module.css'
 
@@ -21,6 +22,11 @@ const menus = [
 const DEFAULT_AVATAR = BASE_URL + '/img/profile/avatar.png'
 
 export default class Profile extends Component {
+
+  componentDidMount() {
+    console.log('是否登录',isAuth());
+  }
+
   render() {
     const { history } = this.props
 

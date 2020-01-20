@@ -2,6 +2,8 @@
 
 import axios from 'axios'
 
+let TOKEN = 'my_token'
+
 // 获取当前定位城市信息
 export let getCurrentCity = () => {
     // 从localStorage获取当前城市信息
@@ -22,5 +24,19 @@ export let getCurrentCity = () => {
         // 最好也返回promise对象--简写
         return Promise.resolve(city)
     }
+}
+
+export let getToken = () => {
+    return window.localStorage.getItem(TOKEN)
+}
+export let setToken = (val) => {
+    window.localStorage.setItem(TOKEN, val)
+}
+export let removeToken = () => {
+    window.localStorage.removeItem(TOKEN)
+}
+// 是否登录
+export let isAuth = () => {
+    return !!getToken()
 }
 

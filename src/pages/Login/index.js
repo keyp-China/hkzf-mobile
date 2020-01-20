@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import NavHeader from '../../components/NavHeader'
 
 import { axios } from '../../utils/axios'
+import { setToken } from '../../utils'
 
 import styles from './index.module.css'
 
@@ -35,7 +36,7 @@ class Login extends Component {
             </div>
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
             {/* {errors.username && <div className={styles.error}>{errors.username}</div>} */}
-            <ErrorMessage  className={styles.error}  name="username"  component="div"></ErrorMessage>
+            <ErrorMessage className={styles.error} name="username" component="div"></ErrorMessage>
             <div className={styles.formItem}>
               <Field
                 className={styles.input}
@@ -45,7 +46,7 @@ class Login extends Component {
               />
             </div>
             {/* 长度为5到12位，只能出现数字、字母、下划线 */}
-            <ErrorMessage  className={styles.error}  name="password"  component="div"></ErrorMessage>
+            <ErrorMessage className={styles.error} name="password" component="div"></ErrorMessage>
             <div className={styles.formSubmit}>
               <button className={styles.submit} type="submit">
                 登 录
@@ -73,6 +74,7 @@ export default withFormik({
     let res = await axios.post('/user/login', { username, password })
     if (res.data.status === 200) {
       Toast.success('登陆成功', 2)
+      setToken(res.data.body.token)
     } else {
       Toast.fail(res.data.description, 2)
     }
