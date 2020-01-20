@@ -60,6 +60,7 @@ const labelStyle = {
 export default class HouseDetail extends Component {
   state = {
     isLoading: false,
+    isFavorite: false, // 是否收藏
 
     houseInfo: {
       // 房屋图片
@@ -97,13 +98,24 @@ export default class HouseDetail extends Component {
   }
 
   componentDidMount() {
-    this.getDetail(this.props.match.params.id)
+    let id = this.props.match.params.id
+    this.getDetail(id)
+    this.checkFavorite(id)
+  }
+
+  /* 是否收藏 */
+  async checkFavorite(id) {
+    let res = await axios(`/user/favorites/${id}`)
+    if (res.data.status === 200) {
+      this.setState({
+        isFavorite: res.data.body.isFavorite
+      })
+    }
   }
 
   /* 获取详情数据 */
   async getDetail(id) {
     let res = await axios(`/houses/${id}`)
-    console.log(res);
     this.setState({
       houseInfo: res.data.body
     }, () => {
@@ -191,7 +203,6 @@ export default class HouseDetail extends Component {
             {
               houseInfo.tags.map((item, key) => {
                 let styleTag = `tag${key % 3 + 1}`
-                console.log(styleTag);
                 return <Flex.Item key={key}>
                   <span className={[styles.tag, styles[styleTag]].join(' ')}>
                     {item}
@@ -305,11 +316,11 @@ export default class HouseDetail extends Component {
         <Flex className={styles.fixedBottom}>
           <Flex.Item>
             <img
-              src={BASE_URL + '/img/unstar.png'}
+              src={BASE_URL + (this.state.isFavorite ? '/img/star.png' : '/img/unstar.png')}
               className={styles.favoriteImg}
               alt="收藏"
             />
-            <span className={styles.favorite}>收藏</span>
+            <span className={styles.favorite}>{this.state.isFavorite ? '取消收藏' : '收藏'}</span>
           </Flex.Item>
           <Flex.Item>在线咨询</Flex.Item>
           <Flex.Item>
