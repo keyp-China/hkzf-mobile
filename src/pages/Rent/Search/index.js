@@ -5,11 +5,9 @@ import { SearchBar } from 'antd-mobile'
 import { getCurrentCity } from '../../../utils/index'
 
 import styles from './index.module.css'
+import { axios } from '../../../utils/axios'
 
 export default class Search extends Component {
-  // 当前城市id
-  cityId = getCurrentCity().value
-
   state = {
     // 搜索框的值
     searchTxt: '',
@@ -27,6 +25,25 @@ export default class Search extends Component {
     ))
   }
 
+  // 值改变事件
+  handleChange = async (val) => {
+    this.setState({
+      searchTxt: val
+    })
+    let { value } = await getCurrentCity()
+    let res = await axios("/area/community", {
+      params: {
+        id: value,
+        name: val
+      }
+    })
+    this.setState({
+      tipsList: res.data.body
+    }
+    )
+    console.log(res);
+  }
+
   render() {
     const { history } = this.props
     const { searchTxt } = this.state
@@ -39,6 +56,7 @@ export default class Search extends Component {
           value={searchTxt}
           showCancelButton={true}
           onCancel={() => history.replace('/rent/add')}
+          onChange={this.handleChange}
         />
 
         {/* 搜索提示列表 */}
