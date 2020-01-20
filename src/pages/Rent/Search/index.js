@@ -31,17 +31,20 @@ export default class Search extends Component {
       searchTxt: val
     })
     let { value } = await getCurrentCity()
-    let res = await axios("/area/community", {
-      params: {
-        id: value,
-        name: val
-      }
-    })
-    this.setState({
-      tipsList: res.data.body
-    }
-    )
-    console.log(res);
+    // 函数防抖 500毫秒后执行一次
+    clearTimeout(this.timerId)
+    this.timerId = setTimeout(async () => {
+      let res = await axios("/area/community", {
+        params: {
+          id: value,
+          name: val
+        }
+      })
+      this.setState({
+        tipsList: res.data.body
+      })
+    }, 500)
+
   }
 
   render() {
