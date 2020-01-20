@@ -19,10 +19,23 @@ export default class Search extends Component {
     const { tipsList } = this.state
 
     return tipsList.map(item => (
-      <li key={item.community} className={styles.tip}>
+      <li key={item.community} className={styles.tip}
+        onClick={() => {
+          this.onTipsClick(item)
+        }}>
         {item.communityName}
       </li>
     ))
+  }
+
+  // 点击单个小区事件
+  onTipsClick = (item) => {
+    // 跳转并传值  
+    //   下一页使用this.props.location.state接收参数
+    this.props.history.push('/rent/add', {
+      id: item.community,
+      name: item.communityName
+    })
   }
 
   // 值改变事件

@@ -79,6 +79,16 @@ export default class RentAdd extends Component {
     }
   }
 
+  componentDidMount() {
+    // 接收search的参数
+    let { state } = this.props.location
+    if (state) {
+      this.setState({
+        community: { ...state }
+      })
+    }
+  }
+
   // 取消编辑，返回上一页
   onCancel = () => {
     alert('提示', '放弃发布房源?', [
