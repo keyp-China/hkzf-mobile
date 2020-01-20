@@ -7,9 +7,15 @@ function AuthRoute({ path, exact, children }) {
     return <Route
         exact={exact}
         path={path}
-        render={() => {
+        render={(props) => {
             if (!isAuth()) {
-                return <Redirect to="/login"></Redirect>
+                // return <Redirect to="/login"></Redirect>
+                return <Redirect to={{
+                    pathname: '/login',
+                    state:{
+                        from: props.location // 记录当前页面
+                    }
+                }}></Redirect>
             }
             return children
         }}>
