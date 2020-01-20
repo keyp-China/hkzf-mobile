@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
 import { Link } from 'react-router-dom'
-import { Grid, Button } from 'antd-mobile'
+import { Grid, Button, Modal, Toast } from 'antd-mobile'
 
 import { BASE_URL } from '../../utils/url'
-import { isAuth, getToken } from '../../utils'
+import { isAuth, getToken, removeToken } from '../../utils'
 import { axios } from '../../utils/axios'
 
 import styles from './index.module.css'
@@ -37,11 +37,35 @@ export default class Profile extends Component {
     if (!this.state.isLogin) {
       return
     }
-    let res = await axios('/user', { headers: { authorization: getToken() } })
-    this.setState({
-      userinfo: res.data.body
-    })
-    console.log(res);
+    // let res = await axios('/user', { headers: { authorization: getToken() } })
+    let res = await axios('/user')
+    if (res.data.status === 200) {
+      this.setState({
+        userinfo: res.data.body
+      })
+    }
+  }
+
+  /* 退出 */
+  logout = () => {
+    Modal.alert('退出', '你确定要退出么', [
+      {
+        text: '取消', onPress: () => { }
+      },
+      {
+        text: '确定', onPress: async () => {
+          let res = await axios.post('/user/logout')
+          if (res.data.status === 200) {
+            Toast.info('退出成功', 1)
+            removeToken()
+            this.setState({
+              isLogin: false,
+              userinfo: { avatar: '', nickname: '' }
+            })
+          }
+        }
+      }
+    ])
   }
 
   render() {
