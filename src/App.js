@@ -31,15 +31,9 @@ export default class App extends React.Component {
                 <Route path="/detail/:id" component={HouseDetail}></Route>
                 <Route path="/login" component={Login}></Route>
                 {/* 鉴权路由 权限控制 未登录跳转到登录页 */}
-                <AuthRoute path='/rent' exact={true}> 
-                    <Rent></Rent>
-                </AuthRoute>
-                <AuthRoute path='/rent/add' exact={true}> 
-                    <RentAdd></RentAdd>
-                </AuthRoute>
-                <AuthRoute path='/rent/search' exact={true}> 
-                    <RentSearch></RentSearch>
-                </AuthRoute>
+                <AuthRoute path='/rent' exact={true} Yemian={Rent}></AuthRoute>
+                <AuthRoute path='/rent/add' exact={true} Yemian={RentAdd}></AuthRoute>
+                <AuthRoute path='/rent/search' exact={true} Yemian={RentSearch}></AuthRoute>
             </div>
         </Router>
     }

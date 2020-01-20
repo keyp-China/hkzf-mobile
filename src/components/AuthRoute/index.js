@@ -3,7 +3,7 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { isAuth } from '../../utils'
 /* 函数组件 */
-function AuthRoute({ path, exact, children }) {
+function AuthRoute({ path, exact, children,Yemian }) {
     return <Route
         exact={exact}
         path={path}
@@ -17,7 +17,7 @@ function AuthRoute({ path, exact, children }) {
                     }
                 }}></Redirect>
             }
-            return children
+            return <Yemian {...props}></Yemian>
         }}>
     </Route>
 }
