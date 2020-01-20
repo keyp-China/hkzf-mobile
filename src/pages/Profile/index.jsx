@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 import { Grid, Button } from 'antd-mobile'
 
 import { BASE_URL } from '../../utils/url'
-import { isAuth } from '../../utils'
+import { isAuth, getToken } from '../../utils'
+import { axios } from '../../utils/axios'
 
 import styles from './index.module.css'
 
@@ -22,9 +23,25 @@ const menus = [
 const DEFAULT_AVATAR = BASE_URL + '/img/profile/avatar.png'
 
 export default class Profile extends Component {
+  state = {
+    isLogin: isAuth(), // 是否登录
+    userinfo: { avatar: '', nickname: '' } // 用户信息
+  }
 
   componentDidMount() {
-    console.log('是否登录',isAuth());
+    this.getUserinfo()
+  }
+
+  /* 获取用户信息 */
+  async getUserinfo() {
+    if (!this.state.isLogin) {
+      return
+    }
+    let res = await axios('/user', { headers: { authorization: getToken() } })
+    this.setState({
+      userinfo: res.data.body
+    })
+    console.log(res);
   }
 
   render() {
