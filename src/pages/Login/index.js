@@ -80,7 +80,8 @@ export default withFormik({
         // 有则跳转回原来的页面
         props.history.push(state.from.pathname)
       } else {
-        props.history.push('/home/profile')
+        // props.history.push('/home/profile')
+        props.history.go(-1)
       }
     } else {
       Toast.fail(res.data.description, 2)

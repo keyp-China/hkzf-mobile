@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Carousel, Flex } from 'antd-mobile'
+import { Carousel, Flex, Modal } from 'antd-mobile'
 
 import NavHeader from '../../components/NavHeader'
 import HouseItem from '../../components/HouseItem'
@@ -10,6 +10,7 @@ import { axios } from '../../utils/axios'
 import { BASE_URL } from '../../utils/url'
 
 import styles from './index.module.css'
+import { isAuth } from '../../utils'
 
 // 猜你喜欢
 const recommendHouses = [
@@ -105,6 +106,7 @@ export default class HouseDetail extends Component {
 
   /* 是否收藏 */
   async checkFavorite(id) {
+    if (!isAuth()) return
     let res = await axios(`/user/favorites/${id}`)
     if (res.data.status === 200) {
       this.setState({
@@ -169,6 +171,34 @@ export default class HouseDetail extends Component {
       <div class="${styles.mapArrow}"></div>
     `)
     map.addOverlay(label)
+  }
+
+  /* 点击收藏/取消收藏 */
+  handleFavorite = async () => {
+    if (!isAuth()) {
+      Modal.alert('去登陆', '收藏需要先登录', [
+        { text: '取消', onPress: () => { } },
+        {
+          text: '确定', onPress: () => {
+            this.props.history.push('/login')
+          }
+        }
+      ])
+      return
+    }
+    let favoritesURL = `/user/favorites/${this.props.match.params.id}`
+    let res = null
+    if (this.state.isFavorite) {
+      res = await axios.delete(favoritesURL)
+    } else {
+      res = await axios.post(favoritesURL)
+    }
+    console.log(res);
+    if (res.data.status == 200) {
+      this.setState({
+        isFavorite: !this.state.isFavorite
+      })
+    }
   }
 
   render() {
@@ -314,7 +344,7 @@ export default class HouseDetail extends Component {
 
         {/* 底部收藏按钮 */}
         <Flex className={styles.fixedBottom}>
-          <Flex.Item>
+          <Flex.Item onClick={this.handleFavorite}>
             <img
               src={BASE_URL + (this.state.isFavorite ? '/img/star.png' : '/img/unstar.png')}
               className={styles.favoriteImg}
