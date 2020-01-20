@@ -8,6 +8,8 @@ import Citylist from "./pages/Citylist"
 import Map from "./pages/Map"
 import HouseDetail from "./pages/HouseDetail"
 import Login from "./pages/Login"
+import AuthRoute from './components/AuthRoute'
+import Rent from './pages/Rent'
 
 export default class App extends React.Component {
     render() {
@@ -26,6 +28,10 @@ export default class App extends React.Component {
                 <Route path="/map" component={Map}></Route>
                 <Route path="/detail/:id" component={HouseDetail}></Route>
                 <Route path="/login" component={Login}></Route>
+                {/* 鉴权路由 权限控制 未登录跳转到登录页 */}
+                <AuthRoute path='/rent' exact={true}> 
+                    <Rent></Rent>
+                </AuthRoute>
             </div>
         </Router>
     }
