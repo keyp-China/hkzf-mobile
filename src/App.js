@@ -10,6 +10,8 @@ import HouseDetail from "./pages/HouseDetail"
 import Login from "./pages/Login"
 import AuthRoute from './components/AuthRoute'
 import Rent from './pages/Rent'
+import RentAdd from './pages/Rent/Add'
+import RentSearch from './pages/Rent/Search'
 
 export default class App extends React.Component {
     render() {
@@ -31,6 +33,12 @@ export default class App extends React.Component {
                 {/* 鉴权路由 权限控制 未登录跳转到登录页 */}
                 <AuthRoute path='/rent' exact={true}> 
                     <Rent></Rent>
+                </AuthRoute>
+                <AuthRoute path='/rent/add' exact={true}> 
+                    <RentAdd></RentAdd>
+                </AuthRoute>
+                <AuthRoute path='/rent/search' exact={true}> 
+                    <RentSearch></RentSearch>
                 </AuthRoute>
             </div>
         </Router>

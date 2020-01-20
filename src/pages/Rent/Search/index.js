@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 
 import { SearchBar } from 'antd-mobile'
 
-import { getCity } from '../../../utils'
+import { getCurrentCity } from '../../../utils/index'
 
 import styles from './index.module.css'
 
 export default class Search extends Component {
   // 当前城市id
-  cityId = getCity().value
+  cityId = getCurrentCity().value
 
   state = {
     // 搜索框的值
